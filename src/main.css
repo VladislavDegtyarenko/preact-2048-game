@@ -1,0 +1,79 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  --background: #faf8ef;
+  --text: #776e65;
+  --text-inverted: #f9f6f2;
+  --board: #bbada0;
+  --cell: rgba(238, 228, 218, 0.349);
+  --tile2: #eee4da;
+  --tile4: #ede0c8;
+  --tile8: #f0b077;
+  --tile16: #eb905f;
+  --tile32: #ee7a5d;
+  --tile64: #ea6a4d;
+  --tile128: #edcf72;
+  --tile256: #edcc61;
+  --tile512: #edc850;
+  --tile1024: #edc53f;
+  --tile2048: #edc22e;
+  --tile-huge: #4d4a42;
+  --btn-text: var(--text-inverted);
+  --btn-hover: #9f8d7c;
+
+  --borderRadius: 4px;
+  --transition-duration: 1s;
+
+  background-color: var(--background);
+  color: var(--text);
+  width: 100%;
+  font-size: 16px;
+  /* padding: 2em 0; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100%;
+}
+
+.darkTheme {
+  --background: #14120a;
+  --text: #cdc2af;
+  --text-inverted: #282218;
+  --board: #332b22;
+  --cell: rgba(238, 228, 218, 0.0875);
+  --tile2: hsl(29, 10%, 41%);
+  --tile4: hsl(28, 21%, 46%);
+  --tile8: hsl(24, 40%, 55%);
+  --tile16: hsl(20, 61%, 60%);
+  --tile32: hsl(15, 66%, 55%);
+  --tile64: hsl(10, 80%, 60%);
+  --tile128: hsl(45, 56%, 63%);
+  --tile256: hsl(46, 49%, 58%);
+  --tile512: hsl(46, 81%, 62%);
+  --tile1024: hsl(46, 69%, 57%);
+  --tile2048: hsl(46, 69%, 53%);
+  --tile-huge: #646466;
+  --btn-text: var(--text);
+  --btn-hover: #594835;
+}

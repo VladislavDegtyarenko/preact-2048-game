@@ -1,0 +1,14 @@
+.board {
+  position: relative;
+  margin-top: 1em;
+  padding: 1em;
+  background-color: var(--board);
+  border-radius: var(--borderRadius);
+  user-select: none;
+  --cell-gap: 8px;
+  --cell-gap: calc(var(--container-width) / 40);
+}
+
+.boardInner {
+  position: relative;
+}

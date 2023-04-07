@@ -1,0 +1,10 @@
+.container {
+  max-width: 500px;
+  margin: 0 auto;
+}
+.container {
+  margin: 0 auto;
+  max-width: calc(100% - 16px);
+  width: 480px;
+  font-size: calc(var(--container-width) / 30);
+}

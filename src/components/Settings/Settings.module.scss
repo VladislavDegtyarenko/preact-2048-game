@@ -1,0 +1,55 @@
+.settings {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1em;
+  z-index: 2;
+  border-radius: var(--borderRadius);
+  opacity: 0.5;
+  transition: opacity var(--transition-duration);
+  // backdrop-filter: blur(4px);s
+  .inner {
+    width: 100%;
+    z-index: 1;
+    position: relative;
+    padding: 1.5em;
+    border-radius: var(--borderRadius);
+    background-color: var(--background);
+    header {
+      display: flex;
+      justify-content: space-between;
+    }
+    & > * {
+      position: relative;
+    }
+    & > * + * {
+      margin-top: 1em;
+    }
+    main {
+      & > * + * {
+        margin-top: 0.5em;
+      }
+    }
+  }
+
+  .title {
+    font-size: 1.5em;
+    line-height: 1;
+  }
+
+  .subtitle {
+    font-size: 0.75em;
+    line-height: 1.3;
+  }
+
+  &.visible {
+    opacity: 1;
+  }
+}
