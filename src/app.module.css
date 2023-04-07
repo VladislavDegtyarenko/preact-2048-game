@@ -6,5 +6,5 @@
   margin: 0 auto;
   max-width: calc(100% - 16px);
   width: 480px;
-  font-size: calc(var(--container-width) / 30);
+  /* font-size: calc(var(--container-width) / 25); */
 }

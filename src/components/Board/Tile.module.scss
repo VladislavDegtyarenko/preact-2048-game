@@ -49,7 +49,7 @@
 
 .toDouble {
   z-index: 1;
-  animation: doubleAnimation calc(var(--transition-duration) * 0.75) ease
+  animation: doubleAnimation calc(var(--transition-duration) * 1) ease
     calc(var(--transition-duration) * 0.5);
 }
 
@@ -59,11 +59,11 @@
     opacity: 1;
   }
   33% {
-    transform: scale(0.8);
+    transform: scale(0.75);
     // opacity: 0.75;
   }
   67% {
-    transform: scale(1.15);
+    transform: scale(1.1);
     opacity: 1;
   }
   100% {

@@ -170,10 +170,6 @@ export const GameContextProvider = ({ children }) => {
     }
   }, [tilesWereMoved]);
 
-  // Check if need to run an effect after each move
-  const tilesToDelete = tiles?.some((tile) => tile.toDelete);
-  const tilesToDouble = tiles?.some((tile) => tile.toDouble);
-
   // Use this ref to prevent key events
   // While the tiles are moving
   const isAnimating = useRef(false);

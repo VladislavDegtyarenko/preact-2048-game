@@ -46,7 +46,7 @@ const Tile = ({
     else valueCoeff = 2.2;
 
     // If it works, don't touch it :)
-    let size = `${(valueCoeff * 4) / tilesPerRow}em`;
+    let size = `${(valueCoeff * 4 * 0.9) / tilesPerRow}em`;
 
     return { fontSize: size };
   })();

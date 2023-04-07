@@ -43,12 +43,13 @@ const Board = () => {
   let swipeDetected = false; // Initialize the flag to false
 
   function handleTouchStart(e) {
-    // e.preventDefault();
+    e.preventDefault();
 
     mouseClicked = true;
     // console.log(e?.touches ? e.touches[0].clientX : e.clientX);
 
     if (e.type === "touchstart") {
+      // if (e.touches.length > 0) return;
       touchstart.current = {
         x: e.touches[0].clientX,
         y: e.touches[0].clientY,
@@ -108,7 +109,7 @@ const Board = () => {
   }
 
   function handleTouchEnd(e) {
-    // e.preventDefault();
+    e.preventDefault();
     swipeDetected = false;
     mouseClicked = false;
 
