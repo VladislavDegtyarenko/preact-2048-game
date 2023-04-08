@@ -25,7 +25,7 @@ const Settings = () => {
       <div className={styles.inner}>
         <header>
           <h2 className={styles.title}>Game Settings</h2>
-          <Button onClick={toggleSettingsModal} title="Close settings">
+          <Button onClick={toggleSettingsModal} title="Close settings" transparent="true">
             {<MdClose />}
           </Button>
         </header>

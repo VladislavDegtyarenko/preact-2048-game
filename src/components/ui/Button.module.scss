@@ -9,13 +9,24 @@
   border: none;
   border-radius: var(--borderRadius);
   transition: background-color var(--transition-duration) ease;
+
+  &[disabled] {
+    opacity: 0.5;
+  }
+  &[transparent] {
+    background-color: transparent;
+    color: var(--btn-text);
+    font-size: 2em;
+    padding: 0;
+    svg {
+      opacity: 1;
+    }
+  }
+
   @media (hover: hover) {
     &:not([disabled]):hover {
       cursor: pointer;
-      background-color: var(--btn-hover);
+      color: var(--btn-hover);
     }
-  }
-  &[disabled] {
-    opacity: 0.5;
   }
 }

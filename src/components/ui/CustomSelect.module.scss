@@ -1,16 +1,13 @@
 .select {
-  display: flex;
-  align-items: center;
   width: 100%;
   > * + * {
-    margin-left: 0.5em;
+    margin-top: 0.5em;
   }
 }
 
 .heading {
   font-size: 1em;
   line-height: 1.2;
-  width: 25%;
   text-overflow: ellipsis;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -22,17 +19,14 @@
   display: flex;
   align-items: center;
   text-align: center;
-  flex-grow: 1;
+  width: 100%;
   overflow: hidden;
-  // > * + * {
-  //   margin-left: 0.25em;
-  // }
   border: solid 0.125em var(--board);
   border-radius: var(--borderRadius);
 }
 
 .option {
-  font-size: 0.75em;
+  font-size: 1em;
   // font-weight: 700;
   padding: 0.5em;
   flex-grow: 1;

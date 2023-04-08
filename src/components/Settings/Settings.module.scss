@@ -24,6 +24,7 @@
     background-color: var(--background);
     header {
       display: flex;
+      align-items: center;
       justify-content: space-between;
     }
     & > * {
@@ -34,7 +35,7 @@
     }
     main {
       & > * + * {
-        margin-top: 0.5em;
+        margin-top: 1em;
       }
     }
   }
