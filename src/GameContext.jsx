@@ -432,7 +432,7 @@ export const GameContextProvider = ({ children }) => {
 
       // If no tiles were moved
       // Return the previous (initial) tiles state
-      if (noTilesIsMoved) return [...prevTiles];
+      if (noTilesIsMoved) return prevTiles;
 
       // Otherwise,
       // Save current tiles position in Ref for Undo Action
