@@ -93,6 +93,7 @@ export function App() {
 
     return () => window.removeEventListener("resize", containerWidthHandler);
   }, []);
+
   return (
     <>
       <div

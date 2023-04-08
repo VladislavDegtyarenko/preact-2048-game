@@ -40,13 +40,13 @@ const Tile = ({
   const fontSize = (function () {
     let valueCoeff;
 
-    if (tileValue > 99999) valueCoeff = 1.275;
-    else if (tileValue > 9999) valueCoeff = 1.4;
-    else if (tileValue > 999) valueCoeff = 1.75;
-    else valueCoeff = 2.2;
+    if (tileValue > 99999) valueCoeff = 1;
+    else if (tileValue > 9999) valueCoeff = 1.1;
+    else if (tileValue > 999) valueCoeff = 1.375;
+    else valueCoeff = 1.725;
 
     // If it works, don't touch it :)
-    let size = `${(valueCoeff * 4 * 0.9) / tilesPerRow}em`;
+    let size = `calc(var(--container-width) / ${tilesPerRow} * ${valueCoeff / 6})`;
 
     return { fontSize: size };
   })();
