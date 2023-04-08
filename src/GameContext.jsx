@@ -108,67 +108,10 @@ export const GameContextProvider = ({ children }) => {
 
   let bestScore = useRef(+localStorage.getItem("bestScore") || 0);
 
-  /* LOCAL STORAGE */
-
-  // Save current tiles
-  useEffect(() => {
-    try {
-      localStorage.setItem("tiles", JSON.stringify(tiles));
-    } catch (error) {
-      console.error(error);
-    }
-  }, [tiles]);
-
-  // Save current progress score
-  useEffect(() => {
-    localStorage.setItem("score", score.current);
-  }, [score.current]);
-
-  // Save best score to localStorage
-  useEffect(() => {
-    try {
-      localStorage.setItem("bestScore", bestScore.current);
-    } catch (error) {
-      console.error(error);
-    }
-  }, [bestScore.current]);
-
   // Animate score boolean
   // True, when we've moved the tiles
   // False, when we undo move (disables score animation for undo)
   const animateScore = useRef(true);
-
-  // We use this effect to add a new tile after each move and its re-render
-  // Each move sets it to TRUE
-  const [tilesWereMoved, setTilesWereMoved] = useState(false);
-
-  // useEffect triggers when the tiles were moved
-  useEffect(() => {
-    if (tilesWereMoved) {
-      animateScore.current = true;
-
-      // Set new tile
-      setTimeout(() => {
-        setNewTile();
-      }, ANIMATION_DURATION * 0.5);
-
-      // Save new score
-      tiles.forEach((tile) => {
-        if (tile.toDouble) scoreToAdd.current += tile.value * 2;
-      });
-
-      // Save and update score at half of the animation time
-      setTimeout(() => {
-        scoreHistory.current.push(score.current);
-        score.current += scoreToAdd.current;
-        scoreToAdd.current = 0;
-
-        if (score.current > bestScore.current) {
-          bestScore.current = score.current;
-        }
-      }, ANIMATION_DURATION * 0.75);
-    }
-  }, [tilesWereMoved]);
 
   // Use this ref to prevent key events
   // While the tiles are moving
@@ -297,8 +240,6 @@ export const GameContextProvider = ({ children }) => {
       const newTile = getNewTile(prevTiles);
       return prevTiles ? [...prevTiles, newTile] : [newTile];
     });
-
-    setTilesWereMoved(false);
   };
 
   /* Undo Action */
@@ -324,14 +265,14 @@ export const GameContextProvider = ({ children }) => {
     bindKbdControls();
 
     return () => cleanupKbdControls();
-  }, [tiles, win, waitAfterWin, showWinScreen, settingsIsOpened, isGameOver]);
+  });
 
   function bindKbdControls() {
-    document.body.addEventListener("keydown", keyboardControls, { once: true });
+    document.body.addEventListener("keydown", keyboardControls);
   }
 
   function cleanupKbdControls() {
-    document.body.removeEventListener("keydown", keyboardControls, { once: true });
+    document.body.removeEventListener("keydown", keyboardControls);
   }
 
   function keyboardControls(e) {
@@ -340,9 +281,6 @@ export const GameContextProvider = ({ children }) => {
     const arrowDownKey = e.key === "ArrowDown";
     const arrowLeftKey = e.key === "ArrowLeft";
     const arrowRightKey = e.key === "ArrowRight";
-
-    // bind keys for next move
-    bindKbdControls();
 
     // if empty board, prevent arrow keys actions
     if (!tiles || tiles.length === 0) return;
@@ -387,8 +325,10 @@ export const GameContextProvider = ({ children }) => {
     // if tilesPerRow = 4
     // keys = [0, 1, 2, 3]
     const keys = Array.from(Array(tilesPerRow).keys());
+
     // Define the row and column traversal order based on the move direction
     let rowTraversal, colTraversal;
+
     if (direction === "left" || direction === "right") {
       rowTraversal = keys;
       colTraversal = direction === "left" ? keys : keys.reverse();
@@ -397,8 +337,10 @@ export const GameContextProvider = ({ children }) => {
       colTraversal = keys;
     }
 
+    let tilesMoved = false; // Boolean to check if at least one tile is moved
+
     setTiles((prevTiles) => {
-      // Create a copy of the tiles array
+      // Create a deep copy of the tiles array
       const newTiles = JSON.parse(JSON.stringify(prevTiles));
 
       // Traverse the board in the row and column order
@@ -439,7 +381,8 @@ export const GameContextProvider = ({ children }) => {
             if (!nextTile) {
               currentTile.top = newRow;
               currentTile.left = newCol;
-              currentTile.isMoved = true;
+              // currentTile.isMoved = true;
+              tilesMoved = true;
               continue;
             }
 
@@ -447,10 +390,15 @@ export const GameContextProvider = ({ children }) => {
             // merge the tiles and double the value of the merged tile
             if (nextTile.value === currentTile.value && !nextTile.isMerged) {
               nextTile.isMerged = true;
-              nextTile.isMoved = true;
+              // nextTile.isMoved = true;
+              tilesMoved = true;
+
               // nextTile.toDouble = true; // to double the value after re-render using useEffect
               nextTile.toTriggerDoubleAnimation = true;
               nextTile.value *= 2;
+
+              // add current tile value to scoreToAdd
+              scoreToAdd.current += nextTile.value;
 
               // Check if win
               if (nextTile.value === 2048) setUserWin(true);
@@ -468,7 +416,8 @@ export const GameContextProvider = ({ children }) => {
       }
 
       // Check if no tiles were moved
-      const noTilesIsMoved = !newTiles.some((tile) => tile.isMoved);
+      // const noTilesIsMoved = !newTiles.some((tile) => tile.isMoved);
+      let noTilesIsMoved = !tilesMoved;
       // console.log("noTilesIsMoved: ", noTilesIsMoved);
 
       // Remove isMerged property so we don't need it in the end
@@ -477,9 +426,9 @@ export const GameContextProvider = ({ children }) => {
       });
 
       // Remove isMoved property
-      newTiles.forEach((tile) => {
-        delete tile.isMoved;
-      });
+      // newTiles.forEach((tile) => {
+      //   delete tile.isMoved;
+      // });
 
       // If no tiles were moved
       // Return the previous (initial) tiles state
@@ -489,8 +438,21 @@ export const GameContextProvider = ({ children }) => {
       // Save current tiles position in Ref for Undo Action
       previousTiles.current.push(prevTiles);
 
-      // Generate a new tile after re-render
-      setTilesWereMoved(true);
+      // Set new random tile
+      const newTile = getNewTile(newTiles);
+      newTiles.push(newTile);
+
+      // Tell to animate score increase
+      animateScore.current = true;
+
+      // Save and update score
+      scoreHistory.current.push(score.current);
+      score.current += scoreToAdd.current;
+      scoreToAdd.current = 0;
+
+      if (score.current > bestScore.current) {
+        bestScore.current = score.current;
+      }
 
       return newTiles;
     });
@@ -502,6 +464,31 @@ export const GameContextProvider = ({ children }) => {
     scoreHistory.current.length > 0
       ? scoreHistory.current[scoreHistory.current.length - 1]
       : null;
+
+  /* LOCAL STORAGE */
+
+  // Save current tiles
+  useEffect(() => {
+    try {
+      localStorage.setItem("tiles", JSON.stringify(tiles));
+    } catch (error) {
+      console.error(error);
+    }
+  }, [tiles]);
+
+  // Save current progress score
+  useEffect(() => {
+    localStorage.setItem("score", score.current);
+  }, [score.current]);
+
+  // Save best score to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem("bestScore", bestScore.current);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [bestScore.current]);
 
   /* Main Game Context Object */
 

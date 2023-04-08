@@ -21,7 +21,9 @@ const Board = () => {
 
   useEffect(() => {
     bindSwipes();
-  }, []);
+
+    return () => clearSwipes();
+  });
 
   function bindSwipes() {
     boardRef.current.addEventListener("touchstart", handleTouchStart, { passive: false });
@@ -32,6 +34,25 @@ const Board = () => {
     boardRef.current.addEventListener("mousemove", handleTouchMove, { passive: false });
     boardRef.current.addEventListener("mouseup", handleTouchEnd);
     boardRef.current.addEventListener("mouseleave", handleTouchEnd);
+  }
+
+  function clearSwipes() {
+    boardRef.current.removeEventListener("touchstart", handleTouchStart, {
+      passive: false,
+    });
+    boardRef.current.removeEventListener("touchmove", handleTouchMove, {
+      passive: false,
+    });
+    boardRef.current.removeEventListener("touchend", handleTouchEnd);
+
+    boardRef.current.removeEventListener("mousedown", handleTouchStart, {
+      passive: false,
+    });
+    boardRef.current.removeEventListener("mousemove", handleTouchMove, {
+      passive: false,
+    });
+    boardRef.current.removeEventListener("mouseup", handleTouchEnd);
+    boardRef.current.removeEventListener("mouseleave", handleTouchEnd);
   }
 
   const touchstart = useRef({
