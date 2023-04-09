@@ -17,13 +17,13 @@ const Tile = ({
     actions: { setTiles },
   } = useContext(GameContext);
   const [tileValue, setTileValue] = useState(value);
-  const [notFadedIn, setNotFadedIn] = useState(true);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (notFadedIn)
+    if (!visible)
       setTimeout(() => {
-        setNotFadedIn(false);
-      }, 20);
+        setVisible(true);
+      }, ANIMATION_DURATION * 0.75);
   }, []);
 
   setTimeout(() => {
@@ -81,7 +81,7 @@ const Tile = ({
 
   return (
     <div
-      className={`${styles.tile} ${!notFadedIn ? styles.visible : ""} ${
+      className={`${styles.tile} ${visible ? styles.visible : ""} ${
         toTriggerDoubleAnimation ? styles.toDouble : ""
       } ${toTriggerDeleteAnimation ? styles.toDelete : ""}`}
       style={{
