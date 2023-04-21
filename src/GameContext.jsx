@@ -55,6 +55,12 @@ export const GameContextProvider = ({ children }) => {
   };
 
   const setBoardSize = (boardSize) => {
+    // Reset score
+    animateScore.current = false;
+    score.current = 0;
+    scoreToAdd.current = 0;
+    scoreHistory.current = [];
+
     // Restart the game first
     setTiles(null);
 
