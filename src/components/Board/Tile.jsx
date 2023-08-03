@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, memo } from "react";
 import GameContext from "../../GameContext";
 import { ANIMATION_DURATION } from "../../GameContext";
 import styles from "./Tile.module.scss";
@@ -97,4 +97,4 @@ const Tile = ({
   );
 };
 
-export default Tile;
+export default memo(Tile);

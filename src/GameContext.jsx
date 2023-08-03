@@ -4,7 +4,7 @@ import { nanoid } from "nanoid";
 
 const ANIMATION_TYPE = {
   OFF: 0,
-  FAST: 150,
+  FAST: 125,
   NORMAL: 200,
   SLOW: 300,
 };
@@ -62,7 +62,7 @@ export const GameContextProvider = ({ children }) => {
     scoreHistory.current = [];
 
     // Restart the game first
-    setTiles(null);
+    setTiles([]);
 
     // Then, apply new board size
     setSettings((prevSettings) => ({
@@ -73,18 +73,16 @@ export const GameContextProvider = ({ children }) => {
 
   let tilesPerRow = settings?.boardSize && +settings.boardSize.slice(0, 1);
 
-  // Save Settings to localStorage
-  useEffect(() => {
-    try {
-      localStorage.setItem("settings", JSON.stringify(settings));
-    } catch (error) {
-      console.error(error);
-    }
-  }, [settings]);
-
   // TILES
+  const [tiles, setTiles] = useState(() => {
+    try {
+      const savedTiles = localStorage.getItem("tiles");
 
-  const [tiles, setTiles] = useState(JSON.parse(localStorage.getItem("tiles")) || null);
+      return savedTiles ? JSON.parse(savedTiles) : [];
+    } catch (error) {
+      console.warn("No tiles found in localStorage", error);
+    }
+  });
 
   // const [tiles, setTiles] = useState([
   //   { top: 0, left: 0, value: 2, id: nanoid() },
@@ -120,7 +118,7 @@ export const GameContextProvider = ({ children }) => {
   const animateScore = useRef(true);
 
   // Use this ref to prevent key events
-  // While the tiles are moving
+  // While the tiles are animating/moving
   const isAnimating = useRef(false);
 
   // Win Check
@@ -129,21 +127,21 @@ export const GameContextProvider = ({ children }) => {
   const [showWinScreen, setShowWinScreen] = useState(false);
 
   const setUserWin = () => {
+    if (win) return;
+
     setWin(true);
     setWaitAfterWin(true);
     setShowWinScreen(true);
 
     setTimeout(() => {
       setWaitAfterWin(false);
-    }, 1500);
+    }, 3000);
   };
 
   // Game Over Check
   const [gameOver, setGameOver] = useState(false);
 
   function isGameOver() {
-    if (isAnimating.current) return false;
-
     if (!tiles) return false;
 
     // Check if there are any empty tiles left
@@ -178,26 +176,10 @@ export const GameContextProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    setGameOver(isGameOver());
-  }, [isAnimating.current, tiles]);
+    if (isAnimating.current) return;
 
-  /* ACTIONS */
-
-  /* Start New Game */
-  const startNewGame = () => {
-    animateScore.current = false;
-    score.current = 0;
-    scoreToAdd.current = 0;
-    scoreHistory.current = [];
-    setTiles(null);
-    setWin(false);
-    // setWaitAfterWin(false);
-    setShowWinScreen(false);
-  };
-
-  useEffect(() => {
-    // Triggers setting two randon tiles
-    if (tiles === null) {
+    // Start a new game if board is empty
+    if (tiles.length === 0) {
       // new tiles array
       let newTiles = [];
 
@@ -211,7 +193,24 @@ export const GameContextProvider = ({ children }) => {
 
       setTiles(newTiles);
     }
-  }, [tiles]);
+
+    // Game Over Check
+    setGameOver(isGameOver());
+  }, [isAnimating.current, tiles]);
+
+  /* ACTIONS */
+
+  /* Start New Game */
+  const startNewGame = () => {
+    animateScore.current = false;
+    score.current = 0;
+    scoreToAdd.current = 0;
+    scoreHistory.current = [];
+    setTiles([]);
+    setWin(false);
+    // setWaitAfterWin(false);
+    setShowWinScreen(false);
+  };
 
   /* Generate New Tile */
 
@@ -232,20 +231,13 @@ export const GameContextProvider = ({ children }) => {
         value: getRandomValue(),
         top: getRandomPosition(),
         left: getRandomPosition(),
-        id: nanoid(),
+        id: nanoid(4),
       };
     } while (
       currentTiles?.some((tile) => tile.top === newTile.top && tile.left === newTile.left)
     );
 
     return newTile;
-  };
-
-  const setNewTile = () => {
-    setTiles((prevTiles) => {
-      const newTile = getNewTile(prevTiles);
-      return prevTiles ? [...prevTiles, newTile] : [newTile];
-    });
   };
 
   /* Undo Action */
@@ -265,21 +257,11 @@ export const GameContextProvider = ({ children }) => {
 
   /* GAME KEYBOARD CONTROLS */
 
-  console.log("render");
-
   useEffect(() => {
-    bindKbdControls();
-
-    return () => cleanupKbdControls();
-  });
-
-  function bindKbdControls() {
     document.body.addEventListener("keydown", keyboardControls);
-  }
 
-  function cleanupKbdControls() {
-    document.body.removeEventListener("keydown", keyboardControls);
-  }
+    return () => document.body.removeEventListener("keydown", keyboardControls);
+  });
 
   function keyboardControls(e) {
     // define main controls
@@ -288,28 +270,22 @@ export const GameContextProvider = ({ children }) => {
     const arrowLeftKey = e.key === "ArrowLeft";
     const arrowRightKey = e.key === "ArrowRight";
 
-    // if empty board, prevent arrow keys actions
-    if (!tiles || tiles.length === 0) return;
+    // prevent arrow keys actions
+    // if empty board,
+    // while animating,
+    // when settings modal is opened,
+    if (tiles.length === 0 || isAnimating.current || settingsIsOpened) return;
 
-    // Prevent key events while animating
-    if (isAnimating.current) return;
-
-    // Prevent keys when settings modal is opened
-    if (settingsIsOpened) return;
-    // console.log("settingsIsOpened: ", settingsIsOpened);
-
+    // keys behaviour when the win screen is shown
     if (win && showWinScreen) {
-      // if (!arrowUpKey || !arrowDownKey || !arrowLeftKey || !arrowRightKey) return;
-      if (waitAfterWin) return console.log("User is win. You should wait 3 seconds");
-      else return setShowWinScreen(false);
+      if (!waitAfterWin) setShowWinScreen(false);
+      return;
     }
 
-    // Prevent keys if game is over
-    if (gameOver) return;
+    // if (e.ctrlKey && e.keyCode === 90) undoAction();
 
-    if (win && waitAfterWin)
-      if (win && !waitAfterWin)
-        return console.log("User is win. You should wait 3 seconds");
+    // prevent arrow keys actions if game is over
+    if (gameOver) return;
 
     if (arrowUpKey) moveTiles("up");
     if (arrowDownKey) moveTiles("down");
@@ -387,7 +363,6 @@ export const GameContextProvider = ({ children }) => {
             if (!nextTile) {
               currentTile.top = newRow;
               currentTile.left = newCol;
-              // currentTile.isMoved = true;
               tilesMoved = true;
               continue;
             }
@@ -396,10 +371,8 @@ export const GameContextProvider = ({ children }) => {
             // merge the tiles and double the value of the merged tile
             if (nextTile.value === currentTile.value && !nextTile.isMerged) {
               nextTile.isMerged = true;
-              // nextTile.isMoved = true;
               tilesMoved = true;
 
-              // nextTile.toDouble = true; // to double the value after re-render using useEffect
               nextTile.toTriggerDoubleAnimation = true;
               nextTile.value *= 2;
 
@@ -407,12 +380,14 @@ export const GameContextProvider = ({ children }) => {
               scoreToAdd.current += nextTile.value;
 
               // Check if win
-              if (nextTile.value === 2048) setUserWin(true);
+              const winTile = nextTile.value === 2048;
+              if (winTile) setUserWin();
 
               currentTile.isMerged = true;
-              // currentTile.toDelete = true;
+
               currentTile.top = newRow;
               currentTile.left = newCol;
+
               // Remove the merged tile from the new position
               currentTile.toTriggerDeleteAnimation = true;
             }
@@ -422,19 +397,12 @@ export const GameContextProvider = ({ children }) => {
       }
 
       // Check if no tiles were moved
-      // const noTilesIsMoved = !newTiles.some((tile) => tile.isMoved);
       let noTilesIsMoved = !tilesMoved;
-      // console.log("noTilesIsMoved: ", noTilesIsMoved);
 
       // Remove isMerged property so we don't need it in the end
       newTiles.forEach((tile) => {
         delete tile.isMerged;
       });
-
-      // Remove isMoved property
-      // newTiles.forEach((tile) => {
-      //   delete tile.isMoved;
-      // });
 
       // If no tiles were moved
       // Return the previous (initial) tiles state
@@ -484,7 +452,11 @@ export const GameContextProvider = ({ children }) => {
 
   // Save current progress score
   useEffect(() => {
-    localStorage.setItem("score", score.current);
+    try {
+      localStorage.setItem("score", score.current);
+    } catch (error) {
+      console.error(error);
+    }
   }, [score.current]);
 
   // Save best score to localStorage
@@ -495,6 +467,15 @@ export const GameContextProvider = ({ children }) => {
       console.error(error);
     }
   }, [bestScore.current]);
+
+  // Save Settings to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem("settings", JSON.stringify(settings));
+    } catch (error) {
+      console.error(error);
+    }
+  }, [settings]);
 
   /* Main Game Context Object */
 

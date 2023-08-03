@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, memo } from "react";
 import GameContext from "../GameContext";
 
 import CountUp from "react-countup";
@@ -74,4 +74,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default memo(Header);
