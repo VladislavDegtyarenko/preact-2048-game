@@ -34,8 +34,8 @@ const Tile = ({
 
   const backgroundColor =
     tileValue > 2048
-      ? { backgroundColor: "var(--tile-huge)" }
-      : { backgroundColor: `var(--tile${tileValue})` };
+      ? { "--background-color": "var(--tile-huge)" }
+      : { "--background-color": `var(--tile${tileValue})` };
 
   const fontSize = (function () {
     let valueCoeff;
@@ -92,7 +92,7 @@ const Tile = ({
         ...fontSize,
       }}
     >
-      {tileValue}
+      <span>{tileValue}</span>
     </div>
   );
 };
