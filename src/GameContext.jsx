@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import { createContext, useCallback, useMemo } from "react";
 import { useState, useEffect, useRef } from "react";
 import { nanoid } from "nanoid";
 
@@ -60,6 +60,11 @@ export const GameContextProvider = ({ children }) => {
     score.current = 0;
     scoreToAdd.current = 0;
     scoreHistory.current = [];
+
+    // Reset win state
+    setWin(false);
+    setWaitAfterWin(false);
+    setShowWinScreen(false);
 
     // Restart the game first
     setTiles([]);
@@ -208,7 +213,7 @@ export const GameContextProvider = ({ children }) => {
     scoreHistory.current = [];
     setTiles([]);
     setWin(false);
-    // setWaitAfterWin(false);
+    setWaitAfterWin(false);
     setShowWinScreen(false);
   };
 
@@ -467,6 +472,19 @@ export const GameContextProvider = ({ children }) => {
       console.error(error);
     }
   }, [bestScore.current]);
+
+  // Save win state in localStorage.
+  // We use this in the following scenario:
+  // if the game is won, user refreshes the page and continues to play,
+  // and then when the user reaches another 2048 tile,
+  // we don't show the winning screen again
+  useEffect(() => {
+    try {
+      localStorage.setItem("win", JSON.stringify(win));
+    } catch (error) {
+      console.error(error);
+    }
+  }, [win]);
 
   // Save Settings to localStorage
   useEffect(() => {

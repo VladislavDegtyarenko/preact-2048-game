@@ -26,25 +26,6 @@
   }
 }
 
-.scoreLabel {
-  text-align: center;
-  line-height: 1;
-  background-color: var(--board);
-  padding: 0.25em 0.5em;
-  min-width: 4em;
-  font-size: 1.5em;
-  border-radius: var(--borderRadius);
-  color: var(--btn-text);
-  .scoreHeading {
-    display: block;
-    opacity: 0.7;
-    font-size: 0.5em;
-  }
-  .scoreNum {
-    font-size: calc(1em - var(--fontSizeReduceCoeff));
-  }
-}
-
 .controls {
   display: flex;
   justify-content: end;
