@@ -30,6 +30,13 @@ const Header = () => {
     setCurrentBestScore(bestScore);
   }, [bestScore]);
 
+  const getScoreNumFontSizeCoeff = (num) => {
+    if (num >= 1000000) return ".42em";
+    else if (num >= 100000) return ".28em";
+    else if (num >= 10000) return ".14em";
+    else return "0em";
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles.row}>
@@ -41,6 +48,8 @@ const Header = () => {
               start={previousScore || 0}
               end={score}
               duration={animateScore ? ANIMATION_DURATION / 1000 : 0}
+              className={styles.scoreNum}
+              style={{ "--fontSizeReduceCoeff": getScoreNumFontSizeCoeff(score) }}
             />
           </h2>
           <h2 className={styles.scoreLabel}>
@@ -49,6 +58,10 @@ const Header = () => {
               start={previousBestScore || 0}
               end={currentBestScore || 0}
               duration={animateScore ? ANIMATION_DURATION / 1000 : 0}
+              className={styles.scoreNum}
+              style={{
+                "--fontSizeReduceCoeff": getScoreNumFontSizeCoeff(currentBestScore),
+              }}
             />
           </h2>
         </div>

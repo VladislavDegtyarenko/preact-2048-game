@@ -16,6 +16,10 @@
   box-sizing: border-box;
 }
 
+html {
+  overscroll-behavior: none;
+}
+
 html,
 body {
   height: 100%;
@@ -55,7 +59,6 @@ body {
   flex-direction: column;
   justify-content: center;
   min-height: 100%;
-
   overflow-x: hidden;
 }
 

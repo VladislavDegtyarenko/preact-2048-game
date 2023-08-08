@@ -67,7 +67,6 @@ const Board = () => {
     e.preventDefault();
 
     mouseClicked = true;
-    // console.log(e?.touches ? e.touches[0].clientX : e.clientX);
 
     if (e.type === "touchstart") {
       // if (e.touches.length > 0) return;
@@ -88,7 +87,8 @@ const Board = () => {
   const SWIPE_DISTANCE = 32;
 
   function handleTouchMove(e) {
-    // e.preventDefault();
+    e.preventDefault();
+    e.returnValue = false;
 
     if (swipeDetected) return; // Don't detect any more swipes if one has already been detected
     if (!mouseClicked) return; // Skip if mousedown is not fired
@@ -131,6 +131,7 @@ const Board = () => {
 
   function handleTouchEnd(e) {
     e.preventDefault();
+
     swipeDetected = false;
     mouseClicked = false;
 
