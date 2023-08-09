@@ -1,8 +1,7 @@
 .container {
   margin: 0 auto;
   /* max-width: calc(100% - 16px); */
-  max-width: calc(100% - var(--outer-margin));
+  width: calc(var(--container-width) - var(--outer-margin));
   min-width: 320px;
   height: 100%;
-  width: 480px;
 }

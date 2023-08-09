@@ -1,10 +1,11 @@
-import { useState, useEffect, useRef, useContext, useLayoutEffect } from "react";
+import { useState, useRef, useContext, useLayoutEffect } from "react";
 import Header from "./components/Header";
 import Board from "./components/Board/Board";
 import styles from "./app.module.css";
 import { ANIMATION_DURATION } from "./GameContext";
 import GameContext from "./GameContext";
 import { THEME } from "./GameContext";
+import { debounce } from "lodash";
 
 /* TODO:
 - Share score to Facebook/Twiiter
@@ -50,6 +51,9 @@ Settings:
 
 */
 
+const MIN_CONTAINER_WIDTH = 360,
+  MAX_CONTAINER_WIDTH = 480;
+
 export function App() {
   const {
     tilesPerRow,
@@ -79,27 +83,36 @@ export function App() {
     : document.body?.classList.remove("darkTheme");
 
   // Dynamic container width
-  const [containerWidth, setContainerWidth] = useState(480);
+  const [containerWidth, setContainerWidth] = useState(MAX_CONTAINER_WIDTH);
   const containerRef = useRef();
 
   const containerWidthHandler = () => {
-    setContainerWidth((prevWidth) =>
-      containerRef?.current ? Math.floor(containerRef?.current.clientWidth) : prevWidth
-    );
+    setContainerWidth((prevWidth) => {
+      const viewportWidth = document.body.clientWidth;
+      console.log("viewportWidth: ", viewportWidth);
+
+      if (!containerRef.current) return prevWidth;
+
+      if (viewportWidth < MIN_CONTAINER_WIDTH) return MIN_CONTAINER_WIDTH;
+      else if (viewportWidth > MAX_CONTAINER_WIDTH) return MAX_CONTAINER_WIDTH;
+      else return Math.floor(viewportWidth);
+    });
   };
+
+  const debounceContainerWidthHandler = debounce(containerWidthHandler, 150);
 
   useLayoutEffect(() => {
     containerWidthHandler();
 
-    window.addEventListener("resize", containerWidthHandler);
+    window.addEventListener("resize", debounceContainerWidthHandler);
 
-    return () => window.removeEventListener("resize", containerWidthHandler);
+    return () => window.removeEventListener("resize", debounceContainerWidthHandler);
   }, []);
 
   const OUTER_MARGIN = 16;
   const BOARD_PADDING = 16;
 
-  const boardWidth = containerWidth - OUTER_MARGIN - BOARD_PADDING; // board size without padding
+  const boardWidth = containerWidth - OUTER_MARGIN * 2 - BOARD_PADDING; // board size without padding
   const cellSize = (boardWidth / tilesPerRow) * 0.94;
   const cellGap = (boardWidth - cellSize * tilesPerRow) / (tilesPerRow - 1);
 
