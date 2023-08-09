@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useRef, useContext, useLayoutEffect } from "react";
 import Header from "./components/Header";
 import Board from "./components/Board/Board";
 import styles from "./app.module.css";
@@ -52,6 +52,7 @@ Settings:
 
 export function App() {
   const {
+    tilesPerRow,
     settings: { theme },
   } = useContext(GameContext);
 
@@ -78,21 +79,29 @@ export function App() {
     : document.body?.classList.remove("darkTheme");
 
   // Dynamic container width
-  const [containerWidth, setContainerWidth] = useState(0);
+  const [containerWidth, setContainerWidth] = useState(480);
   const containerRef = useRef();
 
   const containerWidthHandler = () => {
-    setContainerWidth(containerRef?.current.clientWidth);
-    // console.dir(containerRef?.current.clientWidth);
+    setContainerWidth((prevWidth) =>
+      containerRef?.current ? Math.floor(containerRef?.current.clientWidth) : prevWidth
+    );
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     containerWidthHandler();
 
     window.addEventListener("resize", containerWidthHandler);
 
     return () => window.removeEventListener("resize", containerWidthHandler);
   }, []);
+
+  const OUTER_MARGIN = 16;
+  const BOARD_PADDING = 16;
+
+  const boardWidth = containerWidth - OUTER_MARGIN - BOARD_PADDING; // board size without padding
+  const cellSize = (boardWidth / tilesPerRow) * 0.94;
+  const cellGap = (boardWidth - cellSize * tilesPerRow) / (tilesPerRow - 1);
 
   return (
     <>
@@ -101,6 +110,11 @@ export function App() {
         style={{
           "--transition-duration": ANIMATION_DURATION / 1000 + "s",
           "--container-width": containerWidth + "px",
+          "--outer-margin": OUTER_MARGIN + "px",
+          "--tiles-per-row": tilesPerRow,
+          "--board-padding": BOARD_PADDING + "px",
+          "--cell-size": cellSize.toFixed(1) + "px",
+          "--cell-gap": cellGap.toFixed(1) + "px",
         }}
         ref={containerRef}
       >

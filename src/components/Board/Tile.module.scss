@@ -1,23 +1,11 @@
 .tile {
-  --cellWidth: calc(
-    (100% / var(--board-size)) -
-      (var(--cell-gap) / var(--board-size) * (var(--board-size) - 1))
-  );
-  // --cellWidth: 103px;
-  --topPosition: calc((var(--cellWidth) + var(--cell-gap)) * var(--top));
-  --leftPosition: calc((var(--cellWidth) + var(--cell-gap)) * var(--left));
-
-  --translateY: calc(
-    (var(--cellWidth) + var(--cell-gap)) * (var(--top) * var(--board-size))
-  );
-  --translateX: calc(
-    (var(--cellWidth) + var(--cell-gap)) * (var(--left) * var(--board-size))
-  );
+  --translateY: calc((var(--cell-size) + var(--cell-gap)) * (var(--top)));
+  --translateX: calc((var(--cell-size) + var(--cell-gap)) * (var(--left)));
   position: absolute;
   top: 0;
   left: 0;
-  width: var(--cellWidth);
-  height: var(--cellWidth);
+  width: var(--cell-size);
+  height: var(--cell-size);
   display: flex;
   justify-content: center;
   align-items: center;

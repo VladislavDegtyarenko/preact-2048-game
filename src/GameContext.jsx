@@ -89,23 +89,6 @@ export const GameContextProvider = ({ children }) => {
     }
   });
 
-  // const [tiles, setTiles] = useState([
-  //   { top: 0, left: 0, value: 2, id: nanoid() },
-  //   { top: 0, left: 1, value: 4, id: nanoid() },
-  //   { top: 0, left: 2, value: 8, id: nanoid() },
-  //   { top: 0, left: 3, value: 16, id: nanoid() },
-  //   { top: 1, left: 3, value: 32, id: nanoid() },
-  //   { top: 1, left: 2, value: 64, id: nanoid() },
-  //   { top: 1, left: 1, value: 128, id: nanoid() },
-  //   { top: 1, left: 0, value: 256, id: nanoid() },
-  //   { top: 2, left: 0, value: 512, id: nanoid() },
-  //   { top: 2, left: 1, value: 1024, id: nanoid() },
-  //   { top: 2, left: 2, value: 2048, id: nanoid() },
-  //   { top: 2, left: 3, value: 4096, id: nanoid() },
-  //   { top: 3, left: 3, value: 8192, id: nanoid() },
-  //   { top: 3, left: 2, value: 8192 * 2, id: nanoid() },
-  // ]);
-
   // Array of arrays of previous tiles states
   // Used for undo action
   const previousTiles = useRef([]);
@@ -300,7 +283,7 @@ export const GameContextProvider = ({ children }) => {
     // This prevents user to press any arrow key
     // For an ANIMATION_DURATION time
     // In other words, while tiles are moving
-    isAnimating.current = true;
+    // isAnimating.current = true;
     setTimeout(() => {
       isAnimating.current = false;
     }, ANIMATION_DURATION);
@@ -416,6 +399,10 @@ export const GameContextProvider = ({ children }) => {
       // Otherwise,
       // Save current tiles position in Ref for Undo Action
       previousTiles.current.push(prevTiles);
+
+      // Switch isAnimating flag to true
+      // to block multiple keyboard presses
+      isAnimating.current = true;
 
       // Set new random tile
       const newTile = getNewTile(newTiles);

@@ -142,7 +142,7 @@ const Board = () => {
   }
 
   return (
-    <div className={styles.board} style={{ "--board-size": tilesPerRow }}>
+    <div className={styles.board}>
       <div className={styles.boardInner} ref={boardRef}>
         <Grid size={tilesPerRow} />
         <Tiles />

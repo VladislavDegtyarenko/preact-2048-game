@@ -9,19 +9,11 @@
   }
 
   .cell {
-    // include margins
-    // width: calc(
-    //   (100% / var(--board-size)) -
-    //     (var(--cell-gap) / var(--board-size) * (var(--board-size) - 1))
-    // );
-    // flex-shrink: 0;
-
-    width: calc((100% / var(--board-size)));
+    width: var(--cell-size);
+    height: var(--cell-size);
     flex-shrink: 1;
     border-radius: var(--borderRadius);
-    aspect-ratio: 1/1;
     background-color: var(--cell);
-    // transition: all 0.3s ease;
     &:not(:last-child) {
       margin-right: var(--cell-gap);
     }
