@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, memo } from "react";
+import { useState, useEffect, useContext, memo, useRef } from "react";
 import GameContext from "../../GameContext";
 import { ANIMATION_DURATION } from "../../GameContext";
 import styles from "./Tile.module.scss";
@@ -8,7 +8,6 @@ const Tile = ({
   value,
   top,
   left,
-  // notFadedIn,
   toTriggerDeleteAnimation,
   toTriggerDoubleAnimation,
 }) => {
@@ -19,11 +18,15 @@ const Tile = ({
   const [tileValue, setTileValue] = useState(value);
   const [visible, setVisible] = useState(false);
 
+  const animateTileMoves = useRef(false);
+
   useEffect(() => {
     if (!visible)
       setTimeout(() => {
         setVisible(true);
-      }, ANIMATION_DURATION * 0.75);
+      }, ANIMATION_DURATION * 0.5);
+
+    animateTileMoves.current = true;
   }, []);
 
   setTimeout(() => {
@@ -46,7 +49,9 @@ const Tile = ({
     else valueCoeff = 1.725;
 
     // If it works, don't touch it :)
-    let size = `calc(var(--container-width) / ${tilesPerRow} * ${valueCoeff / 6})`;
+    let size = `calc(var(--container-width) / ${tilesPerRow} * ${
+      Math.round((valueCoeff / 6) * 100) / 100
+    })`;
 
     return { fontSize: size };
   })();
@@ -81,9 +86,9 @@ const Tile = ({
 
   return (
     <div
-      className={`${styles.tile} ${visible ? styles.visible : ""} ${
-        toTriggerDoubleAnimation ? styles.toDouble : ""
-      } ${toTriggerDeleteAnimation ? styles.toDelete : ""}`}
+      className={`${styles.tile} ${
+        animateTileMoves.current ? styles.animateTransform : ""
+      } ${toTriggerDoubleAnimation ? styles.onTop : ""}`}
       style={{
         "--top": top,
         "--left": left,
@@ -91,8 +96,15 @@ const Tile = ({
         ...backgroundColor,
         ...fontSize,
       }}
+      ref={animateTileMoves}
     >
-      <span>{tileValue}</span>
+      <span
+        className={`${styles.tileInner} ${visible ? styles.visible : ""} ${
+          toTriggerDoubleAnimation ? styles.toDouble : ""
+        } ${toTriggerDeleteAnimation ? styles.toDelete : ""}`}
+      >
+        {tileValue}
+      </span>
     </div>
   );
 };
