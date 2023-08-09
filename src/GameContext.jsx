@@ -1,4 +1,4 @@
-import { createContext, useCallback, useMemo } from "react";
+import { createContext } from "react";
 import { useState, useEffect, useRef } from "react";
 import { nanoid } from "nanoid";
 import { cloneDeep } from "lodash";
@@ -254,16 +254,15 @@ export const GameContextProvider = ({ children }) => {
 
   function keyboardControls(e) {
     // define main controls
-    const arrowUpKey = e.key === "ArrowUp";
-    const arrowDownKey = e.key === "ArrowDown";
-    const arrowLeftKey = e.key === "ArrowLeft";
-    const arrowRightKey = e.key === "ArrowRight";
+    const isArrowKey = (key) =>
+      ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(key);
 
     // prevent arrow keys actions
-    // if empty board,
+    // if the board is empty,
     // while animating,
     // when settings modal is opened,
-    if (tiles.length === 0 || isAnimating.current || settingsIsOpened) return;
+    //  if game is over
+    if (tiles.length === 0 || isAnimating.current || settingsIsOpened || gameOver) return;
 
     // keys behaviour when the win screen is shown
     if (win && showWinScreen) {
@@ -271,23 +270,34 @@ export const GameContextProvider = ({ children }) => {
       return;
     }
 
-    // if (e.ctrlKey && e.keyCode === 90) undoAction();
+    if (isArrowKey(e.key)) {
+      e.preventDefault();
 
-    // prevent arrow keys actions if game is over
-    if (gameOver) return;
+      switch (e.key) {
+        case "ArrowUp":
+          moveTiles("up");
+          break;
+        case "ArrowDown":
+          moveTiles("down");
+          break;
+        case "ArrowLeft":
+          moveTiles("left");
+          break;
+        case "ArrowRight":
+          moveTiles("right");
+          break;
+        default:
+          break;
+      }
 
-    if (arrowUpKey) moveTiles("up");
-    if (arrowDownKey) moveTiles("down");
-    if (arrowLeftKey) moveTiles("left");
-    if (arrowRightKey) moveTiles("right");
-
-    // This prevents user to press any arrow key
-    // For an ANIMATION_DURATION time
-    // In other words, while tiles are moving
-    // isAnimating.current = true;
-    setTimeout(() => {
-      isAnimating.current = false;
-    }, ANIMATION_DURATION);
+      // This prevents user to press any arrow key
+      // For an ANIMATION_DURATION time
+      // In other words, while tiles are moving
+      // isAnimating.current = true;
+      setTimeout(() => {
+        isAnimating.current = false;
+      }, ANIMATION_DURATION);
+    }
   }
 
   /* Move Tiles Function */
