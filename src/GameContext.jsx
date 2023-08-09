@@ -1,6 +1,7 @@
 import { createContext, useCallback, useMemo } from "react";
 import { useState, useEffect, useRef } from "react";
 import { nanoid } from "nanoid";
+import { cloneDeep } from "lodash";
 
 const ANIMATION_TYPE = {
   OFF: 0,
@@ -311,7 +312,8 @@ export const GameContextProvider = ({ children }) => {
 
     setTiles((prevTiles) => {
       // Create a deep copy of the tiles array
-      const newTiles = JSON.parse(JSON.stringify(prevTiles));
+      // const newTiles = JSON.parse(JSON.stringify(prevTiles));
+      const newTiles = cloneDeep(prevTiles);
 
       // Traverse the board in the row and column order
       for (let row of rowTraversal) {
