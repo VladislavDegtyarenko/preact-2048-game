@@ -4,7 +4,7 @@ import { App } from "./app";
 import { GameContextProvider } from "./GameContext";
 import "./main.css";
 
-const root = createRoot(document.getElementById("app"));
+const root = createRoot(document.getElementById("app") as HTMLElement);
 
 root.render(
   <StrictMode>

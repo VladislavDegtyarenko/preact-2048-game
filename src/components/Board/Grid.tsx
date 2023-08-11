@@ -1,6 +1,6 @@
 import styles from "./Grid.module.scss";
 
-const Grid = ({ size }) => {
+const Grid = ({ size }: { size: number }) => {
   return (
     <div className={styles.grid}>
       {[...Array(size).keys()].map((row) => (

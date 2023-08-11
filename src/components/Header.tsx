@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect, memo, useMemo } from "react";
+import { useContext, useState, useEffect } from "react";
 import GameContext from "../GameContext";
 
 import CountUp from "react-countup";

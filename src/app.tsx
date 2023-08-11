@@ -4,8 +4,10 @@ import Board from "./components/Board/Board";
 import styles from "./app.module.css";
 import { ANIMATION_DURATION } from "./GameContext";
 import GameContext from "./GameContext";
-import { THEME } from "./GameContext";
 import { debounce } from "lodash";
+
+// TS
+import { CustomCSSVariables, Theme } from "./types/types";
 
 /* TODO:
 - Share score to Facebook/Twiiter
@@ -64,16 +66,16 @@ export function App() {
   let isDarkTheme;
 
   switch (theme) {
-    case THEME.LIGHT:
+    case Theme.LIGHT:
       isDarkTheme = false;
       break;
-    case THEME.DARK:
+    case Theme.DARK:
       isDarkTheme = true;
       break;
-    case THEME.SYSTEM:
-      isDarkTheme =
-        window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-      break;
+    // case Theme.SYSTEM:
+    //   isDarkTheme =
+    //     window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    //   break;
     default:
       isDarkTheme = true;
   }
@@ -84,12 +86,11 @@ export function App() {
 
   // Dynamic container width
   const [containerWidth, setContainerWidth] = useState(MAX_CONTAINER_WIDTH);
-  const containerRef = useRef();
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const containerWidthHandler = () => {
     setContainerWidth((prevWidth) => {
       const viewportWidth = document.body.clientWidth;
-      console.log("viewportWidth: ", viewportWidth);
 
       if (!containerRef.current) return prevWidth;
 
@@ -116,21 +117,19 @@ export function App() {
   const cellSize = (boardWidth / tilesPerRow) * 0.94;
   const cellGap = (boardWidth - cellSize * tilesPerRow) / (tilesPerRow - 1);
 
+  const style: CustomCSSVariables = {
+    "--transition-duration": ANIMATION_DURATION / 1000 + "s",
+    "--container-width": containerWidth + "px",
+    "--outer-margin": OUTER_MARGIN + "px",
+    "--tiles-per-row": tilesPerRow,
+    "--board-padding": BOARD_PADDING + "px",
+    "--cell-size": cellSize.toFixed(1) + "px",
+    "--cell-gap": cellGap.toFixed(1) + "px",
+  };
+
   return (
     <>
-      <div
-        className={`${styles.container}`}
-        style={{
-          "--transition-duration": ANIMATION_DURATION / 1000 + "s",
-          "--container-width": containerWidth + "px",
-          "--outer-margin": OUTER_MARGIN + "px",
-          "--tiles-per-row": tilesPerRow,
-          "--board-padding": BOARD_PADDING + "px",
-          "--cell-size": cellSize.toFixed(1) + "px",
-          "--cell-gap": cellGap.toFixed(1) + "px",
-        }}
-        ref={containerRef}
-      >
+      <div className={`${styles.container}`} style={style} ref={containerRef}>
         <Header />
         <Board />
       </div>

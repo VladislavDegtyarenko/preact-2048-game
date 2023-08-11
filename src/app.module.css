@@ -4,4 +4,5 @@
   width: calc(var(--container-width) - var(--outer-margin));
   min-width: 320px;
   height: 100%;
+  --transition-duration: 200;
 }

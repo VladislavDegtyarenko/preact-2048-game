@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext, memo, useRef } from "react";
 import GameContext from "../../GameContext";
 import { ANIMATION_DURATION } from "../../GameContext";
+import { CustomTileStyles, Tile as TileProps } from "../../types/types";
 import styles from "./Tile.module.scss";
 
 const Tile = ({
@@ -10,7 +11,7 @@ const Tile = ({
   left,
   toTriggerDeleteAnimation,
   toTriggerDoubleAnimation,
-}) => {
+}: TileProps) => {
   const {
     tilesPerRow,
     actions: { setTiles },
@@ -84,19 +85,20 @@ const Tile = ({
     }
   }, [toTriggerDeleteAnimation]);
 
+  const tileStyles = {
+    "--top": top,
+    "--left": left,
+    ...color,
+    ...backgroundColor,
+    ...fontSize,
+  } as CustomTileStyles;
+
   return (
     <div
       className={`${styles.tile} ${
         animateTileMoves.current ? styles.animateTransform : ""
       } ${toTriggerDoubleAnimation ? styles.onTop : ""}`}
-      style={{
-        "--top": top,
-        "--left": left,
-        ...color,
-        ...backgroundColor,
-        ...fontSize,
-      }}
-      ref={animateTileMoves}
+      style={tileStyles}
     >
       <span
         className={`${styles.tileInner} ${visible ? styles.visible : ""} ${

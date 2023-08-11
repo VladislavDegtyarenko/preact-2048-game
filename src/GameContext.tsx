@@ -1,46 +1,64 @@
-import { createContext } from "react";
+import React, { createContext, ReactNode } from "react";
 import { useState, useEffect, useRef } from "react";
 import { nanoid } from "nanoid";
-import { cloneDeep } from "lodash";
+import { cloneDeep, values } from "lodash";
 
-const ANIMATION_TYPE = {
-  OFF: 0,
-  FAST: 125,
-  NORMAL: 200,
-  SLOW: 300,
-};
+// TS
+import { Direction, GameContextProps, Settings, Tile } from "./types/types";
+import { Theme } from "./types/types";
+import { BoardSize } from "./types/types";
 
-export const THEME = {
-  DARK: "Elegant Dark",
-  LIGHT: "Classic Light",
-  // SYSTEM: "System Preffered",
-};
-
-const DEFAULT_THEME = THEME.DARK;
-
-export const BOARD_SIZE = {
-  S: "3x3",
-  M: "4x4",
-  L: "5x5",
-  XL: "6x6",
-};
-
-const DEFAULT_SETTINGS = {
-  theme: DEFAULT_THEME,
-  boardSize: BOARD_SIZE.M,
+const DEFAULT_SETTINGS: Settings = {
+  theme: Theme.DARK,
+  boardSize: BoardSize.M,
   // animations: null,
   // mode: null, // classic, odd
 };
 
-export const ANIMATION_DURATION = ANIMATION_TYPE.NORMAL; // in ms
+export const ANIMATION_DURATION = 200; // in ms
 
-const GameContext = createContext();
+const GameContext = createContext<GameContextProps>({
+  tiles: [] as Tile[],
+  tilesPerRow: 4,
+  score: 0,
+  bestScore: 0,
+  gameOver: false,
+  previousScore: 0,
+  ANIMATION_DURATION,
+  animateScore: false,
+  actions: {
+    startNewGame: () => {},
+    setTiles: () => {},
+    moveTiles: () => {},
+    undoAction: () => {},
+  },
+  if: {
+    noUndoActions: false,
+    win: false,
+    showWinScreen: false,
+    setShowWinScreen: () => {},
+    waitAfterWin: false,
+  },
+  settings: {
+    ...DEFAULT_SETTINGS,
+    settingsIsOpened: false,
+    toggleSettingsModal: () => {},
+    setTheme: (theme: Theme) => {},
+    setBoardSize: (boardSize: BoardSize) => {},
+  },
+});
 
-export const GameContextProvider = ({ children }) => {
+export const GameContextProvider = ({ children }: { children: ReactNode }) => {
   /* SETTINGS */
-  const [settings, setSettings] = useState(
-    JSON.parse(localStorage.getItem("settings")) || DEFAULT_SETTINGS
-  );
+  const [settings, setSettings] = useState(() => {
+    try {
+      const settingsLS = localStorage.getItem("settings");
+      if (settingsLS) return JSON.parse(settingsLS) as Settings;
+    } catch (error) {
+      console.error("Error getting settings from localStorage", error);
+    }
+    return DEFAULT_SETTINGS;
+  });
 
   const [settingsIsOpened, setSettingsIsOpened] = useState(false);
 
@@ -48,14 +66,14 @@ export const GameContextProvider = ({ children }) => {
     setSettingsIsOpened((s) => !s);
   };
 
-  const setTheme = (theme) => {
+  const setTheme = (theme: Theme) => {
     setSettings((prevSettings) => ({
       ...prevSettings,
       theme,
     }));
   };
 
-  const setBoardSize = (boardSize) => {
+  const setBoardSize = (boardSize: BoardSize) => {
     // Reset score
     animateScore.current = false;
     score.current = 0;
@@ -84,22 +102,51 @@ export const GameContextProvider = ({ children }) => {
     try {
       const savedTiles = localStorage.getItem("tiles");
 
-      return savedTiles ? JSON.parse(savedTiles) : [];
+      if (savedTiles) JSON.parse(savedTiles) as Tile[];
     } catch (error) {
-      console.warn("No tiles found in localStorage", error);
+      console.error("No tiles found in localStorage", error);
     }
+
+    return [] as Tile[];
   });
 
   // Array of arrays of previous tiles states
   // Used for undo action
-  const previousTiles = useRef([]);
+  const previousTiles = useRef<Tile[][]>([]);
 
   // Game Score
-  const score = useRef(+localStorage.getItem("score") || 0);
-  const scoreToAdd = useRef(null);
-  const scoreHistory = useRef([]); // for Undo action
+  const score = useRef(
+    (() => {
+      try {
+        const savedScoreJSON = localStorage.getItem("score");
+        if (!savedScoreJSON) return 0;
+        const savedScore = JSON.parse(savedScoreJSON);
+        if (!isNaN(savedScore)) return savedScore;
+      } catch (error) {
+        console.error("Erorr parsing current score from localStorage", error);
+      }
 
-  let bestScore = useRef(+localStorage.getItem("bestScore") || 0);
+      return 0;
+    })()
+  );
+  // const score = useRef(0);
+  const scoreToAdd = useRef(0);
+  const scoreHistory = useRef<number[]>([]); // for Undo action
+
+  let bestScore = useRef(
+    (() => {
+      try {
+        const savedScoreJSON = localStorage.getItem("bestScore");
+        if (!savedScoreJSON) return 0;
+        const savedScore = JSON.parse(savedScoreJSON);
+        if (!isNaN(savedScore)) return savedScore;
+      } catch (error) {
+        console.error("Erorr parsing best score from localStorage", error);
+      }
+
+      return 0;
+    })()
+  );
 
   // Animate score boolean
   // True, when we've moved the tiles
@@ -170,7 +217,7 @@ export const GameContextProvider = ({ children }) => {
     // Start a new game if board is empty
     if (tiles.length === 0) {
       // new tiles array
-      let newTiles = [];
+      let newTiles = [] as Tile[];
 
       // first tile
       newTiles.push(getNewTile());
@@ -195,6 +242,7 @@ export const GameContextProvider = ({ children }) => {
     score.current = 0;
     scoreToAdd.current = 0;
     scoreHistory.current = [];
+    previousTiles.current = [];
     setTiles([]);
     setWin(false);
     setWaitAfterWin(false);
@@ -203,7 +251,7 @@ export const GameContextProvider = ({ children }) => {
 
   /* Generate New Tile */
 
-  const getNewTile = (currentTiles) => {
+  const getNewTile = (currentTiles?: Tile[]): Tile => {
     const getRandomPosition = () => {
       return Math.round(Math.random() * (tilesPerRow - 1));
     };
@@ -213,7 +261,7 @@ export const GameContextProvider = ({ children }) => {
     // Tile 4 = 10%
     const getRandomValue = () => (Math.random() < 0.9 ? 2 : 4);
 
-    let newTile;
+    let newTile: Tile;
 
     do {
       newTile = {
@@ -252,9 +300,9 @@ export const GameContextProvider = ({ children }) => {
     return () => document.body.removeEventListener("keydown", keyboardControls);
   });
 
-  function keyboardControls(e) {
+  function keyboardControls(e: KeyboardEvent) {
     // define main controls
-    const isArrowKey = (key) =>
+    const isArrowKey = (key: KeyboardEvent["key"]) =>
       ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(key);
 
     // prevent arrow keys actions
@@ -302,13 +350,13 @@ export const GameContextProvider = ({ children }) => {
 
   /* Move Tiles Function */
 
-  const moveTiles = (direction) => {
+  const moveTiles = (direction: Direction) => {
     // if tilesPerRow = 4
     // keys = [0, 1, 2, 3]
     const keys = Array.from(Array(tilesPerRow).keys());
 
     // Define the row and column traversal order based on the move direction
-    let rowTraversal, colTraversal;
+    let rowTraversal: number[], colTraversal: number[];
 
     if (direction === "left" || direction === "right") {
       rowTraversal = keys;
@@ -496,7 +544,7 @@ export const GameContextProvider = ({ children }) => {
 
   /* Main Game Context Object */
 
-  const game = {
+  const game: GameContextProps = {
     tiles,
     tilesPerRow,
     score: score.current,
