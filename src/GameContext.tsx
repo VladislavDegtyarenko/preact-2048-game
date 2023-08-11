@@ -243,6 +243,7 @@ export const GameContextProvider = ({ children }: { children: ReactNode }) => {
     scoreToAdd.current = 0;
     scoreHistory.current = [];
     previousTiles.current = [];
+    isAnimating.current = false;
     setTiles([]);
     setWin(false);
     setWaitAfterWin(false);
