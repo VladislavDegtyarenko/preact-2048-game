@@ -1,14 +1,15 @@
-import { useContext, useRef, useEffect, useState } from "react";
+import { useContext, useRef, useState, useLayoutEffect } from "react";
 import GameContext from "../../GameContext";
 import Confetti from "react-confetti";
 import styles from "./WinScreen.module.scss";
+import { debounce } from "lodash";
 
 const YouWin = () => {
   const {
     if: { win, waitAfterWin, showWinScreen, setShowWinScreen },
   } = useContext(GameContext);
 
-  const winScreenRef = useRef();
+  const winScreenRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 
   // Fade In animation
@@ -23,18 +24,22 @@ const YouWin = () => {
   });
 
   const resizeConfetti = () => {
+    if (!winScreenRef.current) return;
+
     setConfettiSize({
       width: winScreenRef.current.clientWidth,
       height: winScreenRef.current.clientHeight,
     });
   };
 
-  useEffect(() => {
+  const debounceResizeConfetti = debounce(resizeConfetti, 150);
+
+  useLayoutEffect(() => {
     resizeConfetti();
 
-    window.addEventListener("resize", resizeConfetti);
+    window.addEventListener("resize", debounceResizeConfetti);
 
-    return () => window.removeEventListener("resize", resizeConfetti);
+    return () => window.removeEventListener("resize", debounceResizeConfetti);
   }, []);
 
   return (

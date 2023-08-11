@@ -13,7 +13,7 @@
   &[disabled] {
     opacity: 0.5;
   }
-  &[transparent] {
+  &.transparent {
     background-color: transparent;
     color: var(--btn-text);
     font-size: 2em;

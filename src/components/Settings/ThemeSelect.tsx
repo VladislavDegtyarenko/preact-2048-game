@@ -2,22 +2,23 @@ import { useContext } from "react";
 import GameContext from "../../GameContext";
 import CustomSelect from "../ui/CustomSelect";
 
-import { THEME } from "../../GameContext";
+// TS
+import { Theme } from "../../types/types";
 
 const ThemeSelect = () => {
   const {
     settings: { theme, setTheme },
   } = useContext(GameContext);
 
-  const handleChange = (theme) => {
+  const handleChange = (theme: Theme) => {
     setTheme(theme);
   };
 
   return (
     <CustomSelect
       heading="Theme"
-      options={THEME}
-      handleSelect={handleChange}
+      options={Theme}
+      handleSelect={handleChange as (selected: string) => void}
       selected={theme}
     />
   );

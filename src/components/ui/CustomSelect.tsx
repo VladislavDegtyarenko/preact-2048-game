@@ -1,7 +1,12 @@
+import { CustomSelectProps } from "../../types/types";
 import styles from "./CustomSelect.module.scss";
 
-const CustomSelect = ({ heading, options, selected = "-", handleSelect }) => {
-  // console.log("selected: ", selected);
+const CustomSelect = ({
+  heading,
+  options,
+  selected,
+  handleSelect,
+}: CustomSelectProps<string>) => {
   return (
     <div className={styles.select}>
       <h3 className={styles.heading}>{heading}: </h3>
