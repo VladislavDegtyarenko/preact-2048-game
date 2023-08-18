@@ -1,6 +1,3 @@
-// React
-import { TransitionGroup, CSSTransition } from "react-transition-group";
-
 // Redux
 import { useAppSelector } from "../../hooks/reduxHooks";
 import { getTiles } from "../../features/boardSlice";
