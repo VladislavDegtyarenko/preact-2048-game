@@ -1,5 +1,4 @@
-import { useState, useEffect, useContext } from "react";
-import GameContext from "../../GameContext";
+import { useState, useEffect } from "react";
 import styles from "./Settings.module.scss";
 
 import ThemeSelect from "./ThemeSelect";
@@ -7,6 +6,8 @@ import BoardSizeSelect from "./BoardSizeSelect";
 import Overlay from "../ui/Overlay";
 import Button from "../ui/Button";
 import { MdClose } from "react-icons/md";
+import { useAppDispatch } from "../../hooks/reduxHooks";
+import { settingsModalToggled } from "../../features/settingsSlice";
 
 const Settings = () => {
   const [visible, setVisible] = useState(false);
@@ -15,17 +16,19 @@ const Settings = () => {
     if (!visible) setVisible(true);
   }, []);
 
-  const {
-    settings: { toggleSettingsModal },
-  } = useContext(GameContext);
+  const dispatch = useAppDispatch();
+
+  const closeSettingsModal = () => {
+    dispatch(settingsModalToggled(false));
+  };
 
   return (
     <div className={`${styles.settings} ${visible ? styles.visible : ""}`}>
-      <Overlay onClick={toggleSettingsModal} />
+      <Overlay onClick={closeSettingsModal} />
       <div className={styles.inner}>
         <header>
           <h2 className={styles.title}>Game Settings</h2>
-          <Button onClick={toggleSettingsModal} title="Close settings" transparent>
+          <Button onClick={closeSettingsModal} title="Close settings" transparent>
             {<MdClose />}
           </Button>
         </header>

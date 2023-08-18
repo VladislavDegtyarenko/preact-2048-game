@@ -1,24 +1,28 @@
-import { useContext } from "react";
-import GameContext from "../../GameContext";
 import CustomSelect from "../ui/CustomSelect";
 
 // TS
 import { Theme } from "../../types/types";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
+import { getTheme, themeChanged } from "../../features/settingsSlice";
 
 const ThemeSelect = () => {
-  const {
-    settings: { theme, setTheme },
-  } = useContext(GameContext);
+  const theme = useAppSelector(getTheme);
+  const dispatch = useAppDispatch();
 
   const handleChange = (theme: Theme) => {
-    setTheme(theme);
+    dispatch(themeChanged(theme));
+  };
+
+  const themeOptions: { [key: string]: Theme } = {
+    "Elegant Dark": "DARK",
+    "Classic Light": "LIGHT",
   };
 
   return (
     <CustomSelect
       heading="Theme"
-      options={Theme}
-      handleSelect={handleChange as (selected: string) => void}
+      options={themeOptions}
+      handleSelect={handleChange as (selected: string | number) => void}
       selected={theme}
     />
   );

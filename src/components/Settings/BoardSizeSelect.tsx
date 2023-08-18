@@ -1,24 +1,32 @@
-import { useContext } from "react";
-import GameContext from "../../GameContext";
 import CustomSelect from "../ui/CustomSelect";
 
 // TS
 import { BoardSize } from "../../types/types";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
+import { boardSizeChanged, getBoardSize } from "../../features/settingsSlice";
+import { newGameStarted } from "../../features/boardSlice";
 
 const BoardSizeSelect = () => {
-  const {
-    settings: { boardSize, setBoardSize },
-  } = useContext(GameContext);
+  const boardSize = useAppSelector(getBoardSize);
+  const dispatch = useAppDispatch();
 
   const handleBoardSizeSelect = (size: BoardSize) => {
-    setBoardSize(size);
+    dispatch(boardSizeChanged(size));
+    dispatch(newGameStarted(size));
+  };
+
+  const boardSizeOptions: { [key: string]: BoardSize } = {
+    "3x3": 3,
+    "4x4": 4,
+    "5x5": 5,
+    "6x6": 6,
   };
 
   return (
     <CustomSelect
-      heading={"Board Size"}
-      options={BoardSize}
-      handleSelect={handleBoardSizeSelect as (selected: string) => void}
+      heading="Board Size"
+      options={boardSizeOptions}
+      handleSelect={handleBoardSizeSelect as (selected: number | string) => void}
       selected={boardSize}
     />
   );

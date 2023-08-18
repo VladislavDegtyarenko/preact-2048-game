@@ -1,6 +1,8 @@
-import { useState, useEffect, useContext, memo, useRef } from "react";
-import GameContext from "../../GameContext";
-import { ANIMATION_DURATION } from "../../GameContext";
+import { useState, useEffect, memo, useRef } from "react";
+import { clearDoubleAnimationFlag, tileDeleted } from "../../features/boardSlice";
+import { getBoardSize } from "../../features/settingsSlice";
+import { ANIMATION_DURATION } from "../../utils/constants";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { CustomTileStyles, Tile as TileProps } from "../../types/types";
 import styles from "./Tile.module.scss";
 
@@ -12,10 +14,9 @@ const Tile = ({
   toTriggerDeleteAnimation,
   toTriggerDoubleAnimation,
 }: TileProps) => {
-  const {
-    tilesPerRow,
-    actions: { setTiles },
-  } = useContext(GameContext);
+  const boardSize = useAppSelector(getBoardSize);
+  const dispatch = useAppDispatch();
+
   const [tileValue, setTileValue] = useState(value);
   const [visible, setVisible] = useState(false);
 
@@ -29,10 +30,6 @@ const Tile = ({
 
     animateTileMoves.current = true;
   }, []);
-
-  setTimeout(() => {
-    setTileValue(value);
-  }, ANIMATION_DURATION * 0.75);
 
   const color = tileValue > 4 ? { color: "var(--text-inverted)" } : {};
 
@@ -50,7 +47,7 @@ const Tile = ({
     else valueCoeff = 1.725;
 
     // If it works, don't touch it :)
-    let size = `calc(var(--container-width) / ${tilesPerRow} * ${
+    let size = `calc(var(--container-width) / ${boardSize} * ${
       Math.round((valueCoeff / 6) * 100) / 100
     })`;
 
@@ -58,29 +55,29 @@ const Tile = ({
   })();
 
   // Double Animation
+  const [animateDouble, setAnimateDouble] = useState(false);
 
   useEffect(() => {
-    if (toTriggerDoubleAnimation)
-      setTimeout(() => {
-        setTiles((prevTiles) =>
-          prevTiles.map((tile) => {
-            if (tile.id === id) {
-              delete tile.toTriggerDoubleAnimation;
-            }
+    // check if it's actually doubled
+    if (value !== tileValue) {
+      setAnimateDouble(true);
 
-            return tile;
-          })
-        );
+      setTimeout(() => {
+        setTileValue(value);
+      }, ANIMATION_DURATION * 0.75);
+
+      setTimeout(() => {
+        setAnimateDouble(false);
       }, ANIMATION_DURATION * 1.5);
-  }, [toTriggerDoubleAnimation]);
+    }
+  }, [value]);
 
   // Delete Animation
-
   useEffect(() => {
     if (toTriggerDeleteAnimation) {
       // delete tile after animation finish
       setTimeout(() => {
-        setTiles((prevTiles) => prevTiles.filter((tile) => tile.id !== id));
+        dispatch(tileDeleted({ id, boardSize }));
       }, ANIMATION_DURATION);
     }
   }, [toTriggerDeleteAnimation]);
@@ -97,12 +94,12 @@ const Tile = ({
     <div
       className={`${styles.tile} ${
         animateTileMoves.current ? styles.animateTransform : ""
-      } ${toTriggerDoubleAnimation ? styles.onTop : ""}`}
+      } ${animateDouble ? styles.onTop : ""}`}
       style={tileStyles}
     >
       <span
         className={`${styles.tileInner} ${visible ? styles.visible : ""} ${
-          toTriggerDoubleAnimation ? styles.toDouble : ""
+          animateDouble ? styles.toDouble : ""
         } ${toTriggerDeleteAnimation ? styles.toDelete : ""}`}
       >
         {tileValue}

@@ -1,11 +1,17 @@
+import { useAppSelector } from "../../hooks/reduxHooks";
+import { getBoardSize } from "../../features/settingsSlice";
+
+// Styles
 import styles from "./Grid.module.scss";
 
-const Grid = ({ size }: { size: number }) => {
+const Grid = () => {
+  const boardSize = useAppSelector(getBoardSize);
+
   return (
     <div className={styles.grid}>
-      {[...Array(size).keys()].map((row) => (
+      {[...Array(boardSize).keys()].map((row) => (
         <div className={styles.row} key={row}>
-          {[...Array(size).keys()].map((cell) => (
+          {[...Array(boardSize).keys()].map((cell) => (
             <div className={styles.cell} key={cell}></div>
           ))}
         </div>
