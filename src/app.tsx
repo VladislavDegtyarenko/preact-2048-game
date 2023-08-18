@@ -1,13 +1,17 @@
-import { useState, useRef, useContext, useLayoutEffect } from "react";
+import { useRef, useLayoutEffect } from "react";
+
+// Redux
+
 import Header from "./components/Header";
 import Board from "./components/Board/Board";
-import styles from "./app.module.css";
-import { ANIMATION_DURATION } from "./GameContext";
-import GameContext from "./GameContext";
-import { debounce } from "lodash";
+import styles from "./app.module.scss";
 
 // TS
-import { CustomCSSVariables, Theme } from "./types/types";
+import { useAppDispatch, useAppSelector } from "./hooks/reduxHooks";
+import useKeyboard from "./hooks/useKeyboard";
+import useSwipes from "./hooks/useSwipes";
+import useDynamicWidth from "./hooks/useDynamicWidth";
+import { newGameStarted } from "./features/boardSlice";
 
 /* TODO:
 - Share score to Facebook/Twiiter
@@ -48,84 +52,28 @@ Settings:
 - board size
 - Dark/Light Mode
 
-
-
-
 */
 
-const MIN_CONTAINER_WIDTH = 360,
-  MAX_CONTAINER_WIDTH = 480;
-
 export function App() {
-  const {
-    tilesPerRow,
-    settings: { theme },
-  } = useContext(GameContext);
-
-  // Check if dark theme
-  let isDarkTheme;
-
-  switch (theme) {
-    case Theme.LIGHT:
-      isDarkTheme = false;
-      break;
-    case Theme.DARK:
-      isDarkTheme = true;
-      break;
-    // case Theme.SYSTEM:
-    //   isDarkTheme =
-    //     window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-    //   break;
-    default:
-      isDarkTheme = true;
-  }
-
-  isDarkTheme
-    ? document.body?.classList.add("darkTheme")
-    : document.body?.classList.remove("darkTheme");
-
-  // Dynamic container width
-  const [containerWidth, setContainerWidth] = useState(MAX_CONTAINER_WIDTH);
+  const { boardSize, theme } = useAppSelector((state) => state.settings);
+  const { tiles, gameOver } = useAppSelector((state) => state.board);
+  const dispatch = useAppDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const containerWidthHandler = () => {
-    setContainerWidth((prevWidth) => {
-      const viewportWidth = document.body.clientWidth;
-
-      if (!containerRef.current) return prevWidth;
-
-      if (viewportWidth < MIN_CONTAINER_WIDTH) return MIN_CONTAINER_WIDTH;
-      else if (viewportWidth > MAX_CONTAINER_WIDTH) return MAX_CONTAINER_WIDTH;
-      else return Math.floor(viewportWidth);
-    });
-  };
-
-  const debounceContainerWidthHandler = debounce(containerWidthHandler, 150);
+  const { style } = useDynamicWidth(containerRef);
+  useKeyboard();
+  useSwipes(containerRef);
 
   useLayoutEffect(() => {
-    containerWidthHandler();
-
-    window.addEventListener("resize", debounceContainerWidthHandler);
-
-    return () => window.removeEventListener("resize", debounceContainerWidthHandler);
+    if (!tiles || tiles.length === 0 || gameOver) {
+      dispatch(newGameStarted(boardSize));
+    }
   }, []);
 
-  const OUTER_MARGIN = 16;
-  const BOARD_PADDING = 16;
-
-  const boardWidth = containerWidth - OUTER_MARGIN * 2 - BOARD_PADDING; // board size without padding
-  const cellSize = (boardWidth / tilesPerRow) * 0.94;
-  const cellGap = (boardWidth - cellSize * tilesPerRow) / (tilesPerRow - 1);
-
-  const style: CustomCSSVariables = {
-    "--transition-duration": ANIMATION_DURATION / 1000 + "s",
-    "--container-width": containerWidth + "px",
-    "--outer-margin": OUTER_MARGIN + "px",
-    "--tiles-per-row": tilesPerRow,
-    "--board-padding": BOARD_PADDING + "px",
-    "--cell-size": cellSize.toFixed(1) + "px",
-    "--cell-gap": cellGap.toFixed(1) + "px",
-  };
+  // Check if dark theme
+  theme === "DARK"
+    ? document.body?.classList.add("darkTheme")
+    : document.body?.classList.remove("darkTheme");
 
   return (
     <>

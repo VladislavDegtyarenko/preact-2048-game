@@ -1,21 +1,24 @@
 import React, { ReactNode } from "react";
 
-export enum Theme {
-  DARK = "Elegant Dark",
-  LIGHT = "Classic Light",
-  // SYSTEM = "System Preferred",
-}
-
-export enum BoardSize {
-  S = "3x3",
-  M = "4x4",
-  L = "5x5",
-  XL = "6x6",
-}
+export type Theme = "DARK" | "LIGHT";
+export type BoardSize = 3 | 4 | 5 | 6;
 
 export type Settings = {
   theme: Theme;
   boardSize: BoardSize;
+  settingsIsOpened: boolean;
+};
+
+export type BoardState = {
+  tiles: Tile[];
+  previousTiles: Tile[] | null;
+  score: number;
+  previousScore: number | null;
+  bestScore: number;
+  gameOver: boolean;
+  win: boolean;
+  waitAfterWin: boolean;
+  showWinScreen: boolean;
 };
 
 export type TileValue =
@@ -111,7 +114,7 @@ export type ButtonProps = {
 
 export interface CustomSelectProps<T> {
   heading: string;
-  options: { [key: string]: string };
-  selected: T;
+  options: { [key: string]: string | number };
+  selected: string | number;
   handleSelect: (selected: T) => void;
 }

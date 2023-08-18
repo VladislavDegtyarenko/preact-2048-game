@@ -1,19 +1,23 @@
-import { useContext, useMemo, useState } from "react";
-import GameContext from "../GameContext";
+import { useEffect, useState } from "react";
 
 import CountUp from "react-countup";
 
+import { ANIMATION_DURATION } from "../utils/constants";
+
+// Styles
 import styles from "./ScoreLabel.module.scss";
+
+// TS
 import { CustomCountUpStyles } from "../types/types";
 
-const ScoreLabel = ({
-  prevScore,
-  currScore,
-}: {
-  prevScore: number | null;
-  currScore: number;
-}) => {
-  const { animateScore, ANIMATION_DURATION } = useContext(GameContext);
+const ScoreLabel = ({ score }: { score: number }) => {
+  const [prevScore, setPrevScore] = useState(0);
+  const [currentScore, setCurrentScore] = useState(score);
+
+  useEffect(() => {
+    setPrevScore(currentScore);
+    setCurrentScore(score);
+  }, [score]);
 
   const getScoreNumFontSizeCoeff = (num: number) => {
     if (num >= 1000000) return ".42em";
@@ -23,7 +27,7 @@ const ScoreLabel = ({
   };
 
   const countUpStyle = {
-    "--fontSizeReduceCoeff": getScoreNumFontSizeCoeff(currScore),
+    "--fontSizeReduceCoeff": getScoreNumFontSizeCoeff(score),
   } as CustomCountUpStyles;
 
   return (
@@ -31,8 +35,8 @@ const ScoreLabel = ({
       <span className={styles.scoreHeading}>Score</span>
       <CountUp
         start={prevScore || 0}
-        end={currScore}
-        duration={animateScore ? ANIMATION_DURATION / 1000 : 0}
+        end={currentScore}
+        duration={ANIMATION_DURATION / 1000}
         className={styles.scoreNum}
         style={countUpStyle}
       />

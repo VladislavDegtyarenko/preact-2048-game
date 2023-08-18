@@ -1,40 +1,41 @@
-import { useContext, useState, useEffect } from "react";
-import GameContext from "../GameContext";
+// Redux
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
+import { getBoardSize, settingsModalToggled } from "../features/settingsSlice";
+import { newGameStarted, undoAction } from "../features/boardSlice";
 
-import CountUp from "react-countup";
+// UI
 import ScoreLabel from "./ScoreLabel";
 import Button from "./ui/Button";
 
 import { MdUndo as UndoIcon } from "react-icons/md";
 import { IoSettingsSharp as SettingsIcon } from "react-icons/io5";
 import { HiRefresh as NewGameIcon } from "react-icons/hi";
+
+// Styles
 import styles from "./Header.module.scss";
 
 const Header = () => {
-  const {
-    score,
-    bestScore,
-    previousScore,
-    actions: { startNewGame, undoAction },
-    if: { noUndoActions },
-    settings: { toggleSettingsModal },
-  } = useContext(GameContext);
+  const { score, bestScore, previousScore } = useAppSelector((state) => state.board);
+  const boardSize = useAppSelector(getBoardSize);
 
-  const [previousBestScore, setPreviousBestScore] = useState(bestScore);
-  const [currentBestScore, setCurrentBestScore] = useState(bestScore);
+  const dispatch = useAppDispatch();
+  const noUndoActions = previousScore === null;
 
-  useEffect(() => {
-    setPreviousBestScore(currentBestScore);
-    setCurrentBestScore(bestScore);
-  }, [bestScore]);
+  const undo = () => {
+    dispatch(undoAction());
+  };
+
+  const startNewGame = () => {
+    dispatch(newGameStarted(boardSize));
+  };
 
   return (
     <header className={styles.header}>
       <div className={styles.row}>
         <h1>2048</h1>
         <div className={styles.stats}>
-          <ScoreLabel prevScore={previousScore} currScore={score} />
-          <ScoreLabel prevScore={previousBestScore} currScore={currentBestScore} />
+          <ScoreLabel score={score} />
+          <ScoreLabel score={bestScore} />
         </div>
       </div>
       <div className={styles.row}>
@@ -46,10 +47,13 @@ const Header = () => {
           <Button title="New game" onClick={startNewGame}>
             <NewGameIcon />
           </Button>
-          <Button title="Undo last move" onClick={undoAction} disabled={noUndoActions}>
+          <Button title="Undo last move" onClick={undo} disabled={noUndoActions}>
             <UndoIcon />
           </Button>
-          <Button title="Open game settings" onClick={toggleSettingsModal}>
+          <Button
+            title="Open game settings"
+            onClick={() => dispatch(settingsModalToggled())}
+          >
             <SettingsIcon />
           </Button>
         </div>

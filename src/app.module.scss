@@ -1,8 +1,8 @@
 .container {
+  --transition-duration: 200;
   margin: 0 auto;
-  /* max-width: calc(100% - 16px); */
   width: calc(var(--container-width) - var(--outer-margin));
   min-width: 320px;
   height: 100%;
-  --transition-duration: 200;
+  padding: 2em 0;
 }

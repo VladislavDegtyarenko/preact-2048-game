@@ -1,10 +1,15 @@
-import { useContext } from "react";
-import GameContext from "../../GameContext";
+// Redux
+import { useAppSelector } from "../../hooks/reduxHooks";
+import { getTiles } from "../../features/boardSlice";
+
+// UI
 import Tile from "./Tile";
+
+// Styles
 import styles from "./Tiles.module.scss";
 
 const Tiles = () => {
-  const { tiles } = useContext(GameContext);
+  const tiles = useAppSelector(getTiles);
 
   return (
     <div className={styles.tiles}>

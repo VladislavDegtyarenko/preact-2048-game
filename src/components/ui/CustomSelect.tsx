@@ -6,19 +6,19 @@ const CustomSelect = ({
   options,
   selected,
   handleSelect,
-}: CustomSelectProps<string>) => {
+}: CustomSelectProps<string | number>) => {
   return (
     <div className={styles.select}>
       <h3 className={styles.heading}>{heading}: </h3>
       <div className={styles.options}>
-        {Object.entries(options).map(([option, text]) => {
+        {Object.entries(options).map(([label, value]) => {
           return (
             <div
-              className={`${styles.option} ${selected === text ? styles.selected : ""}`}
-              key={option}
-              onClick={() => handleSelect(options[option])}
+              className={`${styles.option} ${selected === value ? styles.selected : ""}`}
+              key={value}
+              onClick={() => handleSelect(options[label])}
             >
-              {text}
+              {label}
             </div>
           );
         })}

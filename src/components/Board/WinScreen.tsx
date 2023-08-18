@@ -1,53 +1,54 @@
-import { useContext, useRef, useState, useLayoutEffect } from "react";
-import GameContext from "../../GameContext";
+// React
+import { useRef, useState, useLayoutEffect } from "react";
 import Confetti from "react-confetti";
+import useConfettiSize from "../../hooks/useConfettiSize";
+
+// Redux
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
+import { userCanContinue, userContinuedToPlay } from "../../features/boardSlice";
+
+// Styles
 import styles from "./WinScreen.module.scss";
-import { debounce } from "lodash";
 
 const YouWin = () => {
-  const {
-    if: { win, waitAfterWin, showWinScreen, setShowWinScreen },
-  } = useContext(GameContext);
-
   const winScreenRef = useRef<HTMLDivElement>(null);
+  const confettiSize = useConfettiSize(winScreenRef);
+
+  const visibleTimeout = useRef<ReturnType<typeof setInterval> | null>(null);
+  const waitTimeout = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const { waitAfterWin } = useAppSelector((state) => state.board);
+  const dispatch = useAppDispatch();
+
   const [visible, setVisible] = useState(false);
 
-  // Fade In animation
-  setTimeout(() => {
-    setVisible(win && showWinScreen);
-  }, 200);
-
-  // Handle Confetti Size
-  const [confettiSize, setConfettiSize] = useState({
-    width: 0,
-    height: 0,
-  });
-
-  const resizeConfetti = () => {
-    if (!winScreenRef.current) return;
-
-    setConfettiSize({
-      width: winScreenRef.current.clientWidth,
-      height: winScreenRef.current.clientHeight,
-    });
-  };
-
-  const debounceResizeConfetti = debounce(resizeConfetti, 150);
-
   useLayoutEffect(() => {
-    resizeConfetti();
+    // Fade In animation
+    visibleTimeout.current = setTimeout(() => {
+      setVisible(true);
+    }, 50);
 
-    window.addEventListener("resize", debounceResizeConfetti);
+    // Wait timeout
+    waitTimeout.current = setTimeout(() => {
+      dispatch(userCanContinue());
+    }, 2000);
 
-    return () => window.removeEventListener("resize", debounceResizeConfetti);
+    return () => {
+      if (visibleTimeout.current) clearTimeout(visibleTimeout.current);
+      if (waitTimeout.current) clearTimeout(waitTimeout.current);
+    };
   }, []);
+
+  const hideWinScreen = () => {
+    dispatch(userContinuedToPlay());
+  };
 
   return (
     <div
       className={`${styles.youWin} ${visible ? styles.visible : ""}`}
       ref={winScreenRef}
-      onClick={() => (!waitAfterWin ? setShowWinScreen(false) : null)}
-      onTouchStart={() => (!waitAfterWin ? setShowWinScreen(false) : null)}
+      onClick={() => (!waitAfterWin ? hideWinScreen() : null)}
+      onTouchStart={() => (!waitAfterWin ? hideWinScreen() : null)}
     >
       <Confetti
         {...confettiSize}

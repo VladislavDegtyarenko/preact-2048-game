@@ -28,7 +28,6 @@
   height: 100%;
   position: relative;
   background-color: var(--background-color);
-  color: var(--text);
   border-radius: var(--borderRadius);
   transform: scale(0);
   transition: transform var(--transition-duration);
@@ -44,10 +43,10 @@
     right: 0;
     bottom: 0;
     border-radius: var(--borderRadius);
-    opacity: 0.4;
+    opacity: 0.3;
     z-index: -1;
     user-select: none;
-    box-shadow: 0 0 calc(var(--container-width) / 5) var(--background-color);
+    box-shadow: 0 0 calc(var(--container-width) / 4) var(--background-color);
   }
 }
 
