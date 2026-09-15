@@ -1,5 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { Analytics } from "@vercel/analytics/react";
 import { App } from "./app";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
@@ -10,6 +11,7 @@ const root = createRoot(document.getElementById("app") as HTMLElement);
 
 root.render(
   <StrictMode>
+    <Analytics />
     <Provider store={store}>
       <GameConfirmationProvider>
         <App />
