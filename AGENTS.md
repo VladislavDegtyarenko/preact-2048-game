@@ -26,12 +26,12 @@ No test directory exists.
 
 ## Build, Test, and Development Commands
 
-Install Node.js and npm, its package manager, then run commands from the repository root:
+Install Node.js and pnpm, then run commands from the repository root:
 
-- `npm ci`: install dependencies using `package-lock.json`.
-- `npm run dev`: start the Vite development server with network access enabled.
-- `npm run build`: check TypeScript types and generate production files in `dist/`.
-- `npm run preview`: serve the production build locally after building.
+- `pnpm install --frozen-lockfile`: install dependencies using `pnpm-lock.yaml`.
+- `pnpm dev`: start the Vite development server with network access enabled.
+- `pnpm build`: check TypeScript types and generate production files in `dist/`.
+- `pnpm preview`: serve the production build locally after building.
 
 ## Coding Style & Naming Conventions
 
@@ -41,7 +41,7 @@ Keep game rules in `src/features/` and presentation in components. Use braces fo
 
 ## Testing Guidelines
 
-No automated test framework, test command, coverage target, or test naming convention is configured. Run `npm run build` for code changes. Manually check keyboard moves, swipes, merges, scoring, undo, new games, themes, board-size changes, and saved progress after reload. Check win/game-over screens when changing board rules and narrow-screen layouts when changing styles.
+No automated test framework, test command, coverage target, or test naming convention is configured. Run `pnpm build` for code changes. Manually check keyboard moves, swipes, merges, scoring, undo, new games, themes, board-size changes, and saved progress after reload. Check win/game-over screens when changing board rules and narrow-screen layouts when changing styles.
 
 ## Commit & Pull Request Guidelines
 

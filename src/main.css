@@ -30,6 +30,10 @@ body {
   --text: #776e65;
   --text-inverted: #f9f6f2;
   --board: #bbada0;
+  --button: #bbada0; /* same as --board */
+  --button-hover: hsl(29, 17%, 63%);
+  --button-active: #f0b077;
+  --button-active-hover: hsl(28, 80%, 65%);
   --cell: rgba(238, 228, 218, 0.349);
   --tile2: #eee4da;
   --tile4: #ede0c8;
@@ -44,7 +48,6 @@ body {
   --tile2048: #edc22e;
   --tile-huge: #4d4a42;
   --btn-text: var(--text-inverted);
-  --btn-hover: #9f8d7c;
 
   --borderRadius: 4px;
   --transition-duration: 1s;
@@ -65,6 +68,10 @@ body {
   --text: #cdc2af;
   --text-inverted: #282218;
   --board: #332b22;
+  --button: #332b22; /* same as --board */
+  --button-hover: hsl(32, 20%, 22%);
+  --button-active: hsl(24, 40%, 55%);
+  --button-active-hover: hsl(24, 40%, 50%);
   --cell: rgba(238, 228, 218, 0.0875);
   --tile2: hsl(29, 10%, 41%);
   --tile4: hsl(28, 21%, 46%);
@@ -79,5 +86,4 @@ body {
   --tile2048: hsl(46, 69%, 53%);
   --tile-huge: #646466;
   --btn-text: var(--text);
-  --btn-hover: #594835;
 }

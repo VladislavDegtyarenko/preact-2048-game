@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { type CSSProperties, useEffect, useState } from "react";
 
 import CountUp from "react-countup";
 
@@ -8,9 +8,13 @@ import { ANIMATION_DURATION } from "../utils/constants";
 import styles from "./ScoreLabel.module.scss";
 
 // TS
-import { CustomCountUpStyles } from "../types/types";
+type CustomCountUpStyles = CSSProperties & {
+  "--fontSizeReduceCoeff": string;
+};
 
-const ScoreLabel = ({ score }: { score: number }) => {
+type Props = { score: number, label: string }
+
+const ScoreLabel = ({ score, label }: Props) => {
   const [prevScore, setPrevScore] = useState(0);
   const [currentScore, setCurrentScore] = useState(score);
 
@@ -32,7 +36,7 @@ const ScoreLabel = ({ score }: { score: number }) => {
 
   return (
     <h2 className={styles.scoreLabel}>
-      <span className={styles.scoreHeading}>Score</span>
+      <span className={styles.scoreHeading}>{label}</span>
       <CountUp
         start={prevScore || 0}
         end={currentScore}

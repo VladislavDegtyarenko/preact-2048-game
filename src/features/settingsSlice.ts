@@ -1,8 +1,8 @@
-import { createSlice, Middleware, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store/store";
 import { BoardSize, Settings, Theme } from "../types/types";
 
-import { loadState, saveState } from "../utils/localStorage";
+import { loadState } from "../utils/localStorage";
 
 // Load state from localStorage if available
 const initialState: Settings = loadState("settings") || {

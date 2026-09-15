@@ -3,10 +3,14 @@ import { tilesMoved } from "../features/boardSlice";
 import { Direction } from "../types/types";
 import { useAppDispatch, useAppSelector } from "./reduxHooks";
 import { getBoardSize } from "../features/settingsSlice";
+import { useGameConfirmation } from "../contexts/GameConfirmationContext";
 
 const useSwipes = (elementRef: RefObject<HTMLDivElement>) => {
+  const { pendingAction } = useGameConfirmation();
   const boardSize = useAppSelector(getBoardSize);
   const settingsIsOpened = useAppSelector((state) => state.settings.settingsIsOpened);
+  const { gameOver, showWinScreen } = useAppSelector((state) => state.board);
+  const inputBlocked = Boolean(pendingAction) || settingsIsOpened || gameOver || showWinScreen;
   const dispatch = useAppDispatch();
 
   const moveTiles = (direction: Direction) => {
@@ -58,6 +62,10 @@ const useSwipes = (elementRef: RefObject<HTMLDivElement>) => {
   let swipeDetected = false; // Initialize the flag to false
 
   function handleTouchStart(e: TouchEvent | MouseEvent) {
+    if (inputBlocked || (e.target instanceof Element &&
+      e.target.closest("button, [role='dialog']"))) {
+      return;
+    }
     mouseClicked = true;
 
     if (e.type === "touchstart") {
@@ -82,6 +90,9 @@ const useSwipes = (elementRef: RefObject<HTMLDivElement>) => {
   const SWIPE_DISTANCE = 32;
 
   function handleTouchMove(e: MouseEvent | TouchEvent) {
+    if (inputBlocked || !mouseClicked) {
+      return;
+    }
     e.preventDefault();
 
     if (swipeDetected) return; // Don't detect any more swipes if one has already been detected

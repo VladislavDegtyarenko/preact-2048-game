@@ -1,17 +1,14 @@
-import { useRef, useLayoutEffect } from "react";
+import { useLayoutEffect } from "react";
 
 // Redux
 
 import Header from "./components/Header";
 import Board from "./components/Board/Board";
-import styles from "./app.module.scss";
 
 // TS
 import { useAppDispatch, useAppSelector } from "./hooks/reduxHooks";
-import useKeyboard from "./hooks/useKeyboard";
-import useSwipes from "./hooks/useSwipes";
-import useDynamicWidth from "./hooks/useDynamicWidth";
 import { newGameStarted } from "./features/boardSlice";
+import GameWrapper from "./components/GameWrapper";
 
 /* TODO:
 - Share score to Facebook/Twiiter
@@ -55,14 +52,9 @@ Settings:
 */
 
 export function App() {
+  const dispatch = useAppDispatch();
   const { boardSize, theme } = useAppSelector((state) => state.settings);
   const { tiles, gameOver } = useAppSelector((state) => state.board);
-  const dispatch = useAppDispatch();
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const { style } = useDynamicWidth(containerRef);
-  useKeyboard();
-  useSwipes(containerRef);
 
   useLayoutEffect(() => {
     if (!tiles || tiles.length === 0 || gameOver) {
@@ -71,16 +63,18 @@ export function App() {
   }, []);
 
   // Check if dark theme
-  theme === "DARK"
-    ? document.body?.classList.add("darkTheme")
-    : document.body?.classList.remove("darkTheme");
+  useLayoutEffect(() => {
+    theme === "DARK"
+      ? document.body?.classList.add("darkTheme")
+      : document.body?.classList.remove("darkTheme");
+  }, [theme]);
 
   return (
     <>
-      <div className={`${styles.container}`} style={style} ref={containerRef}>
+      <GameWrapper>
         <Header />
         <Board />
-      </div>
+      </GameWrapper>
     </>
   );
 }

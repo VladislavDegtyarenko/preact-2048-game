@@ -1,47 +1,32 @@
-import { useState, useEffect } from "react";
 import styles from "./Settings.module.scss";
-
 import ThemeSelect from "./ThemeSelect";
 import BoardSizeSelect from "./BoardSizeSelect";
-import Overlay from "../ui/Overlay";
-import Button from "../ui/Button";
-import { MdClose } from "react-icons/md";
+import Modal from "../ui/Modal";
 import { useAppDispatch } from "../../hooks/reduxHooks";
 import { settingsModalToggled } from "../../features/settingsSlice";
 
-const Settings = () => {
-  const [visible, setVisible] = useState(false);
+type SettingsProps = {
+  active: boolean;
+};
 
-  useEffect(() => {
-    if (!visible) setVisible(true);
-  }, []);
-
+const Settings = ({ active }: SettingsProps) => {
   const dispatch = useAppDispatch();
 
-  const closeSettingsModal = () => {
-    dispatch(settingsModalToggled(false));
-  };
-
   return (
-    <div className={`${styles.settings} ${visible ? styles.visible : ""}`}>
-      <Overlay onClick={closeSettingsModal} />
-      <div className={styles.inner}>
-        <header>
-          <h2 className={styles.title}>Game Settings</h2>
-          <Button onClick={closeSettingsModal} title="Close settings" transparent>
-            {<MdClose />}
-          </Button>
-        </header>
-        <main>
-          <ThemeSelect />
-          <BoardSizeSelect />
-        </main>
-        <p className={styles.subtitle}>
-          Applying new board size will reset your game progress, including your current
-          score
-        </p>
+    <Modal
+      title="Game Settings"
+      onClose={() => dispatch(settingsModalToggled(false))}
+      active={active}
+    >
+      <div className={styles.options}>
+        <ThemeSelect />
+        <BoardSizeSelect />
       </div>
-    </div>
+      <p className={styles.subtitle}>
+        Changing the board size starts a new game and resets your current score.
+        Your best score is kept.
+      </p>
+    </Modal>
   );
 };
 

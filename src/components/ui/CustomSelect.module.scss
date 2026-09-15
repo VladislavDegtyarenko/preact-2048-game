@@ -21,28 +21,17 @@
   text-align: center;
   width: 100%;
   overflow: hidden;
-  border: solid 0.125em var(--board);
+  border: solid 0.125em var(--button);
   border-radius: var(--borderRadius);
 }
 
-.option {
-  font-size: 1em;
-  // font-weight: 700;
-  padding: 0.5em;
+.options .option {
+  border-radius: 0;
   flex-grow: 1;
   flex-shrink: 1;
-  font-weight: 700;
-  transition: all var(--transition-duration);
-  cursor: pointer;
-  &:hover {
-    background-color: var(--cell);
-  }
-}
 
-.selected {
-  background-color: var(--tile8);
-  color: var(--text-inverted);
-  &:hover {
-    background-color: var(--tile8);
+  &:focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: -3px;
   }
 }

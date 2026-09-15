@@ -10,7 +10,7 @@ import { userCanContinue, userContinuedToPlay } from "../../features/boardSlice"
 // Styles
 import styles from "./WinScreen.module.scss";
 
-const YouWin = () => {
+const YouWin = ({ isBlocked = false }: { isBlocked?: boolean }) => {
   const winScreenRef = useRef<HTMLDivElement>(null);
   const confettiSize = useConfettiSize(winScreenRef);
 
@@ -40,15 +40,17 @@ const YouWin = () => {
   }, []);
 
   const hideWinScreen = () => {
-    dispatch(userContinuedToPlay());
+    if (!isBlocked && !waitAfterWin) {
+      dispatch(userContinuedToPlay());
+    }
   };
 
   return (
     <div
       className={`${styles.youWin} ${visible ? styles.visible : ""}`}
       ref={winScreenRef}
-      onClick={() => (!waitAfterWin ? hideWinScreen() : null)}
-      onTouchStart={() => (!waitAfterWin ? hideWinScreen() : null)}
+      onClick={hideWinScreen}
+      onTouchStart={hideWinScreen}
     >
       <Confetti
         {...confettiSize}
