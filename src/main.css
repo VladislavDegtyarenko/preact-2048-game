@@ -50,7 +50,6 @@ body {
   --btn-text: var(--text-inverted);
 
   --borderRadius: 4px;
-  --transition-duration: 1s;
 
   background-color: var(--background);
   color: var(--text);
