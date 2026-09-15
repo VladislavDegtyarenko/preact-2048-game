@@ -11,16 +11,16 @@ A browser-based 2048 game: slide matching tiles together to reach 2048, then kee
 
 ## Run locally
 
-Install Node.js and npm, its package manager. Then download the repository and start the game:
+Install Node.js and pnpm. Then download the repository and start the game:
 
 ```sh
 git clone https://github.com/VladislavDegtyarenko/preact-2048-game.git
 cd preact-2048-game
-npm ci
-npm run dev
+pnpm install --frozen-lockfile
+pnpm dev
 ```
 
-`npm ci` installs the dependency versions recorded in `package-lock.json`. Open the local address printed in the terminal. Vite is configured to open a browser automatically; the development command also makes the server available on your local network.
+`pnpm install --frozen-lockfile` installs the dependency versions recorded in `pnpm-lock.yaml`. Open the local address printed in the terminal. Vite is configured to open a browser automatically; the development command also makes the server available on your local network.
 
 The game runs entirely in the browser. No accounts, database, or environment variables are required.
 
@@ -48,12 +48,12 @@ Run these commands from the repository root:
 
 | Command | Purpose |
 | --- | --- |
-| `npm ci` | Install dependencies from the lockfile. |
-| `npm run dev` | Start the development server. |
-| `npm run build` | Check TypeScript types and write production files to `dist/`. |
-| `npm run preview` | Serve the production build locally; run the build first. |
+| `pnpm install --frozen-lockfile` | Install dependencies from the lockfile. |
+| `pnpm dev` | Start the development server. |
+| `pnpm build` | Check TypeScript types and write production files to `dist/`. |
+| `pnpm preview` | Serve the production build locally; run the build first. |
 
-There is no automated test suite or lint command configured. For code changes, run `npm run build` and follow the manual checks in [Testing Guidelines](AGENTS.md#testing-guidelines).
+There is no automated test suite or lint command configured. For code changes, run `pnpm build` and follow the manual checks in [Testing Guidelines](AGENTS.md#testing-guidelines).
 
 ## How it works
 
