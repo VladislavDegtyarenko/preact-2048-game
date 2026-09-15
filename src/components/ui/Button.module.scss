@@ -1,32 +1,61 @@
 .button {
+  font-family: inherit;
   font-size: 1em;
+  font-weight: 700;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 1em;
-  background-color: var(--board);
-  color: var(--btn-text);
   border: none;
   border-radius: var(--borderRadius);
   transition: background-color var(--transition-duration) ease;
 
-  &[disabled] {
+  &:disabled {
+    cursor: default;
     opacity: 0.5;
   }
-  &.transparent {
-    background-color: transparent;
-    color: var(--text);
-    font-size: 2em;
-    padding: 0;
-    svg {
-      opacity: 1;
-    }
+
+  &:focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: 2px;
   }
 
   @media (hover: hover) {
-    &:not([disabled]):hover {
+    &:not(:disabled):hover {
       cursor: pointer;
-      color: var(--btn-hover);
+    }
+  }
+}
+
+.secondary {
+  background-color: var(--button);
+  color: var(--btn-text);
+
+  @media (hover: hover) {
+    &:not(:disabled):hover {
+      background-color: var(--button-hover);
+    }
+  }
+}
+
+.primary {
+  background-color: var(--button-active);
+  color: var(--text-inverted);
+
+  @media (hover: hover) {
+    &:not(:disabled):hover {
+      background-color: var(--button-active-hover);
+    }
+  }
+}
+
+.transparent {
+  background-color: transparent;
+  color: var(--text);
+
+  @media (hover: hover) {
+    &:not(:disabled):hover {
+      background-color: var(--button-hover);
     }
   }
 }

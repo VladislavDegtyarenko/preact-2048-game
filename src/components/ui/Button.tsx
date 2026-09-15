@@ -1,13 +1,30 @@
-import { ButtonProps } from "../../types/types";
+import { ComponentPropsWithoutRef } from "react";
 import styles from "./Button.module.scss";
 
-const Button = ({ children, onClick, disabled, title, transparent }: ButtonProps) => {
+type ButtonProps = ComponentPropsWithoutRef<"button"> & {
+  variant?: "transparent" | "secondary" | "primary";
+  initialFocus?: boolean;
+};
+
+const Button = ({
+  children,
+  className,
+  type = "button",
+  title,
+  variant = "secondary",
+  initialFocus,
+  ...props
+}: ButtonProps) => {
   return (
     <button
-      className={`${styles.button} ${transparent ? styles.transparent : ""}`}
-      onClick={onClick}
-      disabled={disabled}
+      type={type}
+      data-modal-initial-focus={initialFocus || undefined}
+      aria-label={title}
+      className={[styles.button, styles[variant], className]
+        .filter(Boolean)
+        .join(" ")}
       title={title}
+      {...props}
     >
       {children}
     </button>

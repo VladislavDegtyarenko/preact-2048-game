@@ -10,8 +10,10 @@ import { getBoardSize, getSettingsIsOpened } from "../features/settingsSlice";
 import { Direction } from "../types/types";
 
 import { ANIMATION_DURATION } from "../utils/constants";
+import useGameConfirmation from "./useGameConfirmation";
 
 const useKeyboard = () => {
+  const { pendingAction } = useGameConfirmation();
   const isAnimating = useRef(false); // temporarily
 
   const { tiles, gameOver, win, waitAfterWin, showWinScreen } = useAppSelector(
@@ -35,6 +37,14 @@ const useKeyboard = () => {
     // define main controls
     const isArrowKey = (key: KeyboardEvent["key"]) =>
       ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(key);
+
+    if (pendingAction || e.defaultPrevented || e.key === "Tab" ||
+      (e.target instanceof Element && (
+        e.target.closest("input, select, textarea, [role='dialog']") ||
+        (!isArrowKey(e.key) && e.target.closest("button, a"))
+      ))) {
+      return;
+    }
 
     // prevent arrow keys actions
     // if the board is empty,

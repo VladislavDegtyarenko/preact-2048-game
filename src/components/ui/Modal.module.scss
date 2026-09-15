@@ -1,0 +1,53 @@
+.modal {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1em;
+  z-index: 2;
+  border-radius: var(--borderRadius);
+  opacity: 0.5;
+  transition: opacity var(--transition-duration);
+
+  &[aria-hidden="true"] {
+    pointer-events: none;
+  }
+
+  &.visible {
+    opacity: 1;
+  }
+}
+
+.inner {
+  width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+  z-index: 1;
+  position: relative;
+  padding: 1.5em;
+  border-radius: var(--borderRadius);
+  background-color: var(--background);
+
+  header {
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  & > * + * {
+    margin-top: 1em;
+  }
+}
+
+.inner .closeButton {
+  flex-shrink: 0;
+  font-size: 2em;
+  padding: 0;
+}
+
+.title {
+  font-size: 1.5em;
+  line-height: 1.15;
+}

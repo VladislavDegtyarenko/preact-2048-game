@@ -22,7 +22,7 @@ const ThemeSelect = () => {
     <CustomSelect
       heading="Theme"
       options={themeOptions}
-      handleSelect={handleChange as (selected: string | number) => void}
+      handleSelect={handleChange}
       selected={theme}
     />
   );

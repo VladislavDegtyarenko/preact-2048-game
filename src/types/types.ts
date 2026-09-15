@@ -1,5 +1,3 @@
-import React, { ReactNode } from "react";
-
 export type Theme = "DARK" | "LIGHT";
 export type BoardSize = 3 | 4 | 5 | 6;
 
@@ -10,6 +8,7 @@ export type Settings = {
 };
 
 export type BoardState = {
+  hasMoved: boolean;
   tiles: Tile[];
   previousTiles: Tile[] | null;
   score: number;
@@ -102,19 +101,3 @@ export type CustomTileStyles = React.CSSProperties & {
   "--left": number;
   "--background-color": string;
 };
-
-// UI
-export type ButtonProps = {
-  children: ReactNode;
-  onClick: () => void;
-  transparent?: boolean;
-  title?: string;
-  disabled?: boolean;
-};
-
-export interface CustomSelectProps<T> {
-  heading: string;
-  options: { [key: string]: string | number };
-  selected: string | number;
-  handleSelect: (selected: T) => void;
-}

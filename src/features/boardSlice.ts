@@ -5,7 +5,23 @@ import { cloneDeep } from "lodash";
 import { nanoid } from "nanoid";
 import { loadState } from "../utils/localStorage";
 
-const initialState: BoardState = loadState("board") || {
+type SavedBoard = Omit<BoardState, "hasMoved"> & { hasMoved?: boolean };
+
+const savedBoard: SavedBoard | undefined = loadState("board");
+
+const initialState: BoardState = savedBoard ? {
+  ...savedBoard,
+  hasMoved: savedBoard.hasMoved ?? Boolean(
+    savedBoard.score > 0 ||
+    savedBoard.previousTiles?.length ||
+    savedBoard.previousScore != null ||
+    savedBoard.tiles.length > 2 ||
+    savedBoard.tiles.some((tile) => tile.value > 4) ||
+    savedBoard.win || savedBoard.gameOver ||
+    savedBoard.showWinScreen || savedBoard.waitAfterWin
+  ),
+} : {
+  hasMoved: false,
   tiles: [],
   previousTiles: null,
   score: 0,
@@ -206,6 +222,8 @@ export const boardSlice = createSlice({
         return;
       }
 
+      state.hasMoved = true;
+
       // Otherwise,
       // Save current tiles position in Ref for Undo Action
       state.previousTiles = state.tiles;
@@ -259,6 +277,7 @@ export const boardSlice = createSlice({
       state.showWinScreen = false;
     },
     newGameStarted: (state, action: PayloadAction<BoardSize>) => {
+      state.hasMoved = false;
       state.score = 0;
       state.previousScore = null;
       state.win = false;

@@ -1,7 +1,8 @@
 // Redux
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
-import { getBoardSize, settingsModalToggled } from "../features/settingsSlice";
-import { newGameStarted, undoAction } from "../features/boardSlice";
+import useGameConfirmation from "../hooks/useGameConfirmation";
+import { settingsModalToggled } from "../features/settingsSlice";
+import { undoAction } from "../features/boardSlice";
 
 // UI
 import ScoreLabel from "./ScoreLabel";
@@ -15,18 +16,14 @@ import { HiRefresh as NewGameIcon } from "react-icons/hi";
 import styles from "./Header.module.scss";
 
 const Header = () => {
+  const { requestNewGame } = useGameConfirmation();
   const { score, bestScore, previousScore } = useAppSelector((state) => state.board);
-  const boardSize = useAppSelector(getBoardSize);
 
   const dispatch = useAppDispatch();
   const noUndoActions = previousScore === null;
 
   const undo = () => {
     dispatch(undoAction());
-  };
-
-  const startNewGame = () => {
-    dispatch(newGameStarted(boardSize));
   };
 
   return (
@@ -44,13 +41,19 @@ const Header = () => {
         </p>
 
         <div className={styles.controls}>
-          <Button title="New game" onClick={startNewGame}>
+          <Button variant="secondary" title="New game" onClick={requestNewGame}>
             <NewGameIcon />
           </Button>
-          <Button title="Undo last move" onClick={undo} disabled={noUndoActions}>
+          <Button
+            variant="secondary"
+            title="Undo last move"
+            onClick={undo}
+            disabled={noUndoActions}
+          >
             <UndoIcon />
           </Button>
           <Button
+            variant="secondary"
             title="Open game settings"
             onClick={() => dispatch(settingsModalToggled())}
           >
