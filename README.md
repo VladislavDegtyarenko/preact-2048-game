@@ -65,7 +65,7 @@ There is no automated test suite or lint command configured. For code changes, r
 
 [src/main.tsx](src/main.tsx) starts React and connects Redux Toolkit, which manages shared game state. [src/app.tsx](src/app.tsx) initializes the game, applies the theme, and assembles the interface. [GameWrapper](src/components/GameWrapper.tsx) connects keyboard, swipe, and sizing behavior.
 
-[GameConfirmationProvider](src/features/GameConfirmationProvider.tsx) uses React Context to share pending confirmations directly with the components that need them. Components access it through [useGameConfirmation](src/hooks/useGameConfirmation.ts), so intermediate components do not have to pass request handlers along. Pending requests stay in memory and are not saved with the game.
+[GameConfirmationContext.tsx](src/contexts/GameConfirmationContext.tsx) keeps the context declaration, `GameConfirmationProvider`, and `useGameConfirmation` hook together. They use React Context to share pending confirmations directly with the components that need them, so intermediate components do not have to pass request handlers along. Pending requests stay in memory and are not saved with the game.
 
 [src/features/boardSlice.ts](src/features/boardSlice.ts) handles movement, merging, scoring, and undo. [src/features/localStorageMiddleware.ts](src/features/localStorageMiddleware.ts) saves game state after updates. Components keep their styles alongside their code in `.module.scss` files, which scope styles to each component.
 

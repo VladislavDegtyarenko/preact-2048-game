@@ -3,7 +3,7 @@ import { tilesMoved } from "../features/boardSlice";
 import { Direction } from "../types/types";
 import { useAppDispatch, useAppSelector } from "./reduxHooks";
 import { getBoardSize } from "../features/settingsSlice";
-import useGameConfirmation from "./useGameConfirmation";
+import { useGameConfirmation } from "../contexts/GameConfirmationContext";
 
 const useSwipes = (elementRef: RefObject<HTMLDivElement>) => {
   const { pendingAction } = useGameConfirmation();

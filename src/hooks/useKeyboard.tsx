@@ -10,7 +10,7 @@ import { getBoardSize, getSettingsIsOpened } from "../features/settingsSlice";
 import { Direction } from "../types/types";
 
 import { ANIMATION_DURATION } from "../utils/constants";
-import useGameConfirmation from "./useGameConfirmation";
+import { useGameConfirmation } from "../contexts/GameConfirmationContext";
 
 const useKeyboard = () => {
   const { pendingAction } = useGameConfirmation();

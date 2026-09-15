@@ -10,7 +10,7 @@ import WinScreen from "./WinScreen";
 import GameOverScreen from "./GameOverScreen";
 import Settings from "../Settings/Settings";
 import ConfirmDialog from "../ui/ConfirmDialog";
-import useGameConfirmation from "../../hooks/useGameConfirmation";
+import { useGameConfirmation } from "../../contexts/GameConfirmationContext";
 
 const Board = () => {
   const { pendingAction, confirm, cancel } = useGameConfirmation();

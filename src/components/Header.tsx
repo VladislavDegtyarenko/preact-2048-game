@@ -1,6 +1,6 @@
 // Redux
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
-import useGameConfirmation from "../hooks/useGameConfirmation";
+import { useGameConfirmation } from "../contexts/GameConfirmationContext";
 import { settingsModalToggled } from "../features/settingsSlice";
 import { undoAction } from "../features/boardSlice";
 
