@@ -31,8 +31,8 @@ const Header = () => {
       <div className={styles.row}>
         <h1>2048</h1>
         <div className={styles.stats}>
-          <ScoreLabel score={score} />
-          <ScoreLabel score={bestScore} />
+          <ScoreLabel score={score} label="Score" />
+          <ScoreLabel score={bestScore} label="Best" />
         </div>
       </div>
       <div className={styles.row}>

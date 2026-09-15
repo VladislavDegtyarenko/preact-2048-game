@@ -92,10 +92,6 @@ export type CustomCSSVariables = React.CSSProperties & {
   "--cell-gap": string;
 };
 
-export type CustomCountUpStyles = React.CSSProperties & {
-  "--fontSizeReduceCoeff": string;
-};
-
 export type CustomTileStyles = React.CSSProperties & {
   "--top": number;
   "--left": number;
