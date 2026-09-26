@@ -1,9 +1,15 @@
-import { useState, useEffect, memo, useRef } from "react";
-import { clearDoubleAnimationFlag, tileDeleted } from "../../features/boardSlice";
-import { getBoardSize } from "../../features/settingsSlice";
-import { ANIMATION_DURATION } from "../../utils/constants";
+import { memo, useEffect, useRef, useState } from "react";
+
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
+
+import { ANIMATION_DURATION } from "../../constants";
+import {
+  clearDoubleAnimationFlag,
+  tileDeleted,
+} from "../../features/boardSlice";
+import { getBoardSize } from "../../features/settingsSlice";
 import { CustomTileStyles, Tile as TileProps } from "../../types/types";
+
 import styles from "./Tile.module.scss";
 
 const Tile = ({

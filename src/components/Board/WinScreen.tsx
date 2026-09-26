@@ -1,18 +1,21 @@
-// React
-import { useRef, useState, useLayoutEffect } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
+
 import Confetti from "react-confetti";
-import useConfettiSize from "../../hooks/useConfettiSize";
 
-// Redux
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
-import { userCanContinue, userContinuedToPlay } from "../../features/boardSlice";
+import { useElementSize } from "../../hooks/useElementSize";
 
-// Styles
+import {
+  userCanContinue,
+  userContinuedToPlay,
+} from "../../features/boardSlice";
+
 import styles from "./WinScreen.module.scss";
 
 const YouWin = ({ isBlocked = false }: { isBlocked?: boolean }) => {
-  const winScreenRef = useRef<HTMLDivElement>(null);
-  const confettiSize = useConfettiSize(winScreenRef);
+  const [winScreenElement, setWinScreenElement] =
+    useState<HTMLDivElement | null>(null);
+  const confettiSize = useElementSize(winScreenElement);
 
   const visibleTimeout = useRef<ReturnType<typeof setInterval> | null>(null);
   const waitTimeout = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -48,7 +51,7 @@ const YouWin = ({ isBlocked = false }: { isBlocked?: boolean }) => {
   return (
     <div
       className={`${styles.youWin} ${visible ? styles.visible : ""}`}
-      ref={winScreenRef}
+      ref={setWinScreenElement}
       onClick={hideWinScreen}
       onTouchStart={hideWinScreen}
     >

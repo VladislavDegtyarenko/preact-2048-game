@@ -1,13 +1,19 @@
-import { createContext, type PropsWithChildren, useContext, useRef, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useRef,
+  useState,
+  type PropsWithChildren,
+} from "react";
+
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
+
 import { newGameStarted } from "../features/boardSlice";
 import { boardSizeChanged } from "../features/settingsSlice";
 import { type BoardSize } from "../types/types";
-import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
 
 type PendingGameAction =
-  | { type: "new-game" }
-  | { type: "change-board-size"; size: BoardSize }
-  | null;
+  { type: "new-game" } | { type: "change-board-size"; size: BoardSize } | null;
 
 type GameConfirmationValue = {
   pendingAction: PendingGameAction;
@@ -17,7 +23,9 @@ type GameConfirmationValue = {
   cancel: () => void;
 };
 
-const GameConfirmationContext = createContext<GameConfirmationValue | null>(null);
+const GameConfirmationContext = createContext<GameConfirmationValue | null>(
+  null
+);
 
 type Props = PropsWithChildren;
 
@@ -31,6 +39,7 @@ export const GameConfirmationProvider = ({ children }: Props) => {
 
   const execute = (action: NonNullable<PendingGameAction>) => {
     const size = action.type === "change-board-size" ? action.size : boardSize;
+
     if (action.type === "change-board-size") {
       dispatch(boardSizeChanged(size));
     }
@@ -39,8 +48,10 @@ export const GameConfirmationProvider = ({ children }: Props) => {
   };
 
   const request = (action: NonNullable<PendingGameAction>) => {
-    if (pendingRef.current ||
-      (action.type === "change-board-size" && action.size === boardSize)) {
+    if (
+      pendingRef.current ||
+      (action.type === "change-board-size" && action.size === boardSize)
+    ) {
       return;
     }
 
@@ -66,13 +77,16 @@ export const GameConfirmationProvider = ({ children }: Props) => {
   };
 
   return (
-    <GameConfirmationContext.Provider value={{
-      pendingAction,
-      requestNewGame: () => request({ type: "new-game" }),
-      requestBoardSize: (size: BoardSize) => request({ type: "change-board-size", size }),
-      confirm,
-      cancel,
-    }}>
+    <GameConfirmationContext.Provider
+      value={{
+        pendingAction,
+        requestNewGame: () => request({ type: "new-game" }),
+        requestBoardSize: (size: BoardSize) =>
+          request({ type: "change-board-size", size }),
+        confirm,
+        cancel,
+      }}
+    >
       {children}
     </GameConfirmationContext.Provider>
   );
@@ -82,7 +96,9 @@ export const GameConfirmationProvider = ({ children }: Props) => {
 export const useGameConfirmation = () => {
   const confirmation = useContext(GameConfirmationContext);
   if (!confirmation) {
-    throw new Error("useGameConfirmation must be used inside GameConfirmationProvider.");
+    throw new Error(
+      "useGameConfirmation must be used inside GameConfirmationProvider."
+    );
   }
 
   return confirmation;

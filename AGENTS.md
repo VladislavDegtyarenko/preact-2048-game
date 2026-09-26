@@ -37,7 +37,7 @@ Install Node.js and pnpm, then run commands from the repository root:
 
 Use two-space indentation, double quotes, and semicolons. Keep TypeScript strict checking enabled. Name components `Board.tsx`, hooks `useSwipes.tsx`, and matching styles `Board.module.scss`. Use `UPPER_SNAKE_CASE` for constants.
 
-Keep game rules in `src/features/` and presentation in components. Use braces for every conditional body. Document new utility functions with a short `/** ... */` comment. No formatter or linting tool is configured; keep edits consistent with surrounding formatting. Ask before adding production dependencies.
+Keep game rules in `src/features/` and presentation in components. Use braces for every conditional body. Document new utility functions with a short `/** ... */` comment. Prettier and `@ianvs/prettier-plugin-sort-imports` handle formatting and import groups. Run `pnpm format` to format files or `pnpm format:check` to check them. No linting tool is configured. Ask before adding production dependencies.
 
 ## Testing Guidelines
 

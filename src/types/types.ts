@@ -65,7 +65,7 @@ export type GameContextProps = {
     startNewGame: () => void;
     setTiles: (value: React.SetStateAction<Tile[]>) => void;
     moveTiles: (direction: Direction) => void;
-    undoAction: () => void;
+    undoMove: () => void;
   };
   if: {
     noUndoActions: boolean;

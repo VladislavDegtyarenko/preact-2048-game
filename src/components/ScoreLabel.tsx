@@ -1,18 +1,16 @@
-import { type CSSProperties, useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 
 import CountUp from "react-countup";
 
-import { ANIMATION_DURATION } from "../utils/constants";
+import { ANIMATION_DURATION } from "../constants";
 
-// Styles
 import styles from "./ScoreLabel.module.scss";
 
-// TS
 type CustomCountUpStyles = CSSProperties & {
   "--fontSizeReduceCoeff": string;
 };
 
-type Props = { score: number, label: string }
+type Props = { score: number; label: string };
 
 const ScoreLabel = ({ score, label }: Props) => {
   const [prevScore, setPrevScore] = useState(0);
@@ -23,10 +21,10 @@ const ScoreLabel = ({ score, label }: Props) => {
     setCurrentScore(score);
   }, [score]);
 
-  const getScoreNumFontSizeCoeff = (num: number) => {
-    if (num >= 1000000) return ".42em";
-    else if (num >= 100000) return ".28em";
-    else if (num >= 10000) return ".14em";
+  const getScoreNumFontSizeCoeff = (score: number) => {
+    if (score >= 1_000_000) return ".42em";
+    else if (score >= 100_000) return ".28em";
+    else if (score >= 10_000) return ".14em";
     else return "0em";
   };
 

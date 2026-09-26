@@ -1,37 +1,50 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../store/store";
-import { BoardSize, BoardState, Direction, Tile, TileValue } from "../types/types";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { cloneDeep } from "lodash";
 import { nanoid } from "nanoid";
+
+import { RootState } from "../store/store";
+import {
+  BoardSize,
+  BoardState,
+  Direction,
+  Tile,
+  TileValue,
+} from "../types/types";
 import { loadState } from "../utils/localStorage";
 
 type SavedBoard = Omit<BoardState, "hasMoved"> & { hasMoved?: boolean };
 
 const savedBoard: SavedBoard | undefined = loadState("board");
 
-const initialState: BoardState = savedBoard ? {
-  ...savedBoard,
-  hasMoved: savedBoard.hasMoved ?? Boolean(
-    savedBoard.score > 0 ||
-    savedBoard.previousTiles?.length ||
-    savedBoard.previousScore != null ||
-    savedBoard.tiles.length > 2 ||
-    savedBoard.tiles.some((tile) => tile.value > 4) ||
-    savedBoard.win || savedBoard.gameOver ||
-    savedBoard.showWinScreen || savedBoard.waitAfterWin
-  ),
-} : {
-  hasMoved: false,
-  tiles: [],
-  previousTiles: null,
-  score: 0,
-  previousScore: null,
-  bestScore: 0,
-  gameOver: false,
-  win: false,
-  waitAfterWin: false,
-  showWinScreen: false,
-};
+const initialState: BoardState = savedBoard
+  ? {
+      ...savedBoard,
+      hasMoved:
+        savedBoard.hasMoved ??
+        Boolean(
+          savedBoard.score > 0 ||
+          savedBoard.previousTiles?.length ||
+          savedBoard.previousScore != null ||
+          savedBoard.tiles.length > 2 ||
+          savedBoard.tiles.some((tile) => tile.value > 4) ||
+          savedBoard.win ||
+          savedBoard.gameOver ||
+          savedBoard.showWinScreen ||
+          savedBoard.waitAfterWin
+        ),
+    }
+  : {
+      hasMoved: false,
+      tiles: [],
+      previousTiles: null,
+      score: 0,
+      previousScore: null,
+      bestScore: 0,
+      gameOver: false,
+      win: false,
+      waitAfterWin: false,
+      showWinScreen: false,
+    };
 
 const getNewTile = (currentTiles: Tile[], boardSize: BoardSize): Tile => {
   const getRandomPosition = () => {
@@ -53,7 +66,9 @@ const getNewTile = (currentTiles: Tile[], boardSize: BoardSize): Tile => {
       id: nanoid(4),
     };
   } while (
-    currentTiles?.some((tile) => tile.top === newTile.top && tile.left === newTile.left)
+    currentTiles?.some(
+      (tile) => tile.top === newTile.top && tile.left === newTile.left
+    )
   );
 
   return newTile;
@@ -76,10 +91,18 @@ const isGameOver = (tiles: Tile[], boardSize: BoardSize) => {
   // Check if there are any adjacent tiles with the same value
   for (let i = 0; i < tiles.length; i++) {
     const tile = tiles[i];
-    const right = tiles.find((t) => t.top === tile.top && t.left === tile.left + 1);
-    const left = tiles.find((t) => t.top === tile.top && t.left === tile.left - 1);
-    const down = tiles.find((t) => t.top === tile.top + 1 && t.left === tile.left);
-    const up = tiles.find((t) => t.top === tile.top - 1 && t.left === tile.left);
+    const right = tiles.find(
+      (t) => t.top === tile.top && t.left === tile.left + 1
+    );
+    const left = tiles.find(
+      (t) => t.top === tile.top && t.left === tile.left - 1
+    );
+    const down = tiles.find(
+      (t) => t.top === tile.top + 1 && t.left === tile.left
+    );
+    const up = tiles.find(
+      (t) => t.top === tile.top - 1 && t.left === tile.left
+    );
 
     if (right && right.value === tile.value) {
       return false;
@@ -154,7 +177,12 @@ export const boardSlice = createSlice({
             if (direction === "down") newRow++;
 
             // Check if the new row and column are within the board boundaries
-            if (newRow < 0 || newRow >= boardSize || newCol < 0 || newCol >= boardSize) {
+            if (
+              newRow < 0 ||
+              newRow >= boardSize ||
+              newCol < 0 ||
+              newCol >= boardSize
+            ) {
               break;
             }
 
@@ -252,14 +280,18 @@ export const boardSlice = createSlice({
       // Check for game over
       state.gameOver = isGameOver(newTiles, boardSize);
     },
-    tileDeleted: (state, action: PayloadAction<{ id: string; boardSize: BoardSize }>) => {
+    tileDeleted: (
+      state,
+      action: PayloadAction<{ id: string; boardSize: BoardSize }>
+    ) => {
       const { id, boardSize } = action.payload;
       const newTiles = state.tiles.filter((tile) => tile.id !== id);
       state.tiles = newTiles;
       state.gameOver = isGameOver(newTiles, boardSize);
 
       state.previousTiles =
-        state.previousTiles?.filter((tile) => !tile.toTriggerDeleteAnimation) ?? null;
+        state.previousTiles?.filter((tile) => !tile.toTriggerDeleteAnimation) ??
+        null;
     },
     clearDoubleAnimationFlag: (state, action: PayloadAction<string>) => {
       const tileId = action.payload;
@@ -300,7 +332,7 @@ export const boardSlice = createSlice({
 
       state.tiles = newTiles;
     },
-    undoAction: (state) => {
+    undoMove: (state) => {
       if (state.previousScore !== null && state.previousTiles) {
         state.score = state.previousScore;
         state.previousScore = null;
@@ -333,7 +365,7 @@ export const {
   userCanContinue,
   userContinuedToPlay,
   newGameStarted,
-  undoAction,
+  undoMove,
 } = boardSlice.actions;
 
 export default boardSlice.reducer;

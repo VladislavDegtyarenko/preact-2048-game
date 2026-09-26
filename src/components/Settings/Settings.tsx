@@ -1,9 +1,12 @@
-import styles from "./Settings.module.scss";
-import ThemeSelect from "./ThemeSelect";
-import BoardSizeSelect from "./BoardSizeSelect";
 import Modal from "../ui/Modal";
+import BoardSizeSelect from "./BoardSizeSelect";
+import ThemeSelect from "./ThemeSelect";
+
 import { useAppDispatch } from "../../hooks/reduxHooks";
+
 import { settingsModalToggled } from "../../features/settingsSlice";
+
+import styles from "./Settings.module.scss";
 
 type SettingsProps = {
   active: boolean;

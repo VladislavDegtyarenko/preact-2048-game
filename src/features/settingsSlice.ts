@@ -1,7 +1,7 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+
 import { RootState } from "../store/store";
 import { BoardSize, Settings, Theme } from "../types/types";
-
 import { loadState } from "../utils/localStorage";
 
 // Load state from localStorage if available
@@ -15,9 +15,14 @@ export const settingsSlice = createSlice({
   name: "settings",
   initialState,
   reducers: {
-    settingsModalToggled: (state, action: PayloadAction<boolean | undefined>) => {
+    settingsModalToggled: (
+      state,
+      action: PayloadAction<boolean | undefined>
+    ) => {
       state.settingsIsOpened =
-        typeof action?.payload === "boolean" ? action.payload : !state.settingsIsOpened;
+        typeof action?.payload === "boolean"
+          ? action.payload
+          : !state.settingsIsOpened;
     },
     boardSizeChanged: (state, action: PayloadAction<BoardSize>) => {
       const boardSize = action.payload;
@@ -35,6 +40,7 @@ export const { settingsModalToggled, boardSizeChanged, themeChanged } =
 
 export const getBoardSize = (state: RootState) => state.settings.boardSize;
 export const getTheme = (state: RootState) => state.settings.theme;
-export const getSettingsIsOpened = (state: RootState) => state.settings.settingsIsOpened;
+export const getSettingsIsOpened = (state: RootState) =>
+  state.settings.settingsIsOpened;
 
 export default settingsSlice.reducer;
