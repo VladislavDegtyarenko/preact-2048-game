@@ -1,9 +1,9 @@
 import CustomSelect from "../ui/CustomSelect";
 
-// TS
-import { Theme } from "../../types/types";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
+
 import { getTheme, themeChanged } from "../../features/settingsSlice";
+import { Theme } from "../../types/types";
 
 const ThemeSelect = () => {
   const theme = useAppSelector(getTheme);

@@ -1,11 +1,9 @@
-// Redux
-import { useAppSelector } from "../../hooks/reduxHooks";
-import { getTiles } from "../../features/boardSlice";
-
-// UI
 import Tile from "./Tile";
 
-// Styles
+import { useAppSelector } from "../../hooks/reduxHooks";
+
+import { getTiles } from "../../features/boardSlice";
+
 import styles from "./Tiles.module.scss";
 
 const Tiles = () => {
@@ -13,9 +11,9 @@ const Tiles = () => {
 
   return (
     <div className={styles.tiles}>
-      {tiles && tiles.length > 0
-        ? tiles.map((tile) => <Tile {...tile} key={tile.id} />)
-        : null}
+      {tiles.map((tile) => (
+        <Tile {...tile} key={tile.id} />
+      ))}
     </div>
   );
 };

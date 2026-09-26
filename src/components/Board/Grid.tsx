@@ -1,7 +1,7 @@
 import { useAppSelector } from "../../hooks/reduxHooks";
+
 import { getBoardSize } from "../../features/settingsSlice";
 
-// Styles
 import styles from "./Grid.module.scss";
 
 const Grid = () => {

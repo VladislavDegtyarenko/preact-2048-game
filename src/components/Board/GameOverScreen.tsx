@@ -1,15 +1,18 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+
 import Overlay from "../ui/Overlay";
+
 import styles from "./GameOverScreen.module.scss";
 
 const GameOverScreen = () => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (!visible)
+    if (!visible) {
       setTimeout(() => {
         setVisible(true);
       }, 50);
+    }
   }, []);
 
   return (

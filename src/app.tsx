@@ -1,14 +1,12 @@
 import { useLayoutEffect } from "react";
 
-// Redux
-
-import Header from "./components/Header";
 import Board from "./components/Board/Board";
-
-// TS
-import { useAppDispatch, useAppSelector } from "./hooks/reduxHooks";
-import { newGameStarted } from "./features/boardSlice";
 import GameWrapper from "./components/GameWrapper";
+import Header from "./components/Header";
+
+import { useAppDispatch, useAppSelector } from "./hooks/reduxHooks";
+
+import { newGameStarted } from "./features/boardSlice";
 
 /* TODO:
 - Share score to Facebook/Twiiter

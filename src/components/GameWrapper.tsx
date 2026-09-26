@@ -1,12 +1,19 @@
-import { PropsWithChildren, useRef } from "react";
+import { useRef, type PropsWithChildren } from "react";
+
+import { useAppSelector } from "../hooks/reduxHooks";
+import { useElementSize } from "../hooks/useElementSize";
+import { useKeyboard } from "../hooks/useKeyboard";
+import { useSwipes } from "../hooks/useSwipes";
+
+import { getGameWrapperStyles } from "../utils/getGameWrapperStyles";
+
 import styles from "./GameWrapper.module.scss";
-import useDynamicWidth from "../hooks/useDynamicWidth";
-import useSwipes from "../hooks/useSwipes";
-import useKeyboard from "../hooks/useKeyboard";
 
 const GameWrapper = ({ children }: PropsWithChildren) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { style } = useDynamicWidth(containerRef);
+  const { width: viewportWidth } = useElementSize(document.body);
+  const boardSize = useAppSelector((state) => state.settings.boardSize);
+  const style = getGameWrapperStyles(viewportWidth, boardSize);
 
   useSwipes(containerRef);
   useKeyboard();

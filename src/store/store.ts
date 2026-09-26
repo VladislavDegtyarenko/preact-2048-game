@@ -1,11 +1,8 @@
-import { configureStore, Middleware } from "@reduxjs/toolkit";
+import { Middleware, configureStore } from "@reduxjs/toolkit";
 
-// Reducers
-import settingsReducer from "./../features/settingsSlice";
-import boardReducer from "./../features/boardSlice";
-
-// Middleware
 import { localStorageMiddleware } from "../features/localStorageMiddleware";
+import boardReducer from "./../features/boardSlice";
+import settingsReducer from "./../features/settingsSlice";
 
 const middleware: Middleware[] = [localStorageMiddleware];
 

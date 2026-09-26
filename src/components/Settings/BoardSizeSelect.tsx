@@ -1,10 +1,10 @@
 import CustomSelect from "../ui/CustomSelect";
 
-// TS
-import { BoardSize } from "../../types/types";
 import { useAppSelector } from "../../hooks/reduxHooks";
+
 import { useGameConfirmation } from "../../contexts/GameConfirmationContext";
 import { getBoardSize } from "../../features/settingsSlice";
+import { BoardSize } from "../../types/types";
 
 const BoardSizeSelect = () => {
   const { requestBoardSize } = useGameConfirmation();

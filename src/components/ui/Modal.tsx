@@ -1,7 +1,17 @@
-import { ReactNode, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import {
+  ReactNode,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
+
 import { MdClose } from "react-icons/md";
+
 import Button from "./Button";
 import Overlay from "./Overlay";
+
 import styles from "./Modal.module.scss";
 
 type ModalProps = {
@@ -12,10 +22,17 @@ type ModalProps = {
 };
 
 const FOCUSABLE = [
-  "button:not(:disabled)", "a[href]", "input:not(:disabled)",
-  "select:not(:disabled)", "textarea:not(:disabled)", "[tabindex='0']",
+  "button:not(:disabled)",
+  "a[href]",
+  "input:not(:disabled)",
+  "select:not(:disabled)",
+  "textarea:not(:disabled)",
+  "[tabindex='0']",
 ].join(", ");
-const blockedElements = new Map<Element, { count: number; wasInert: boolean }>();
+const blockedElements = new Map<
+  Element,
+  { count: number; wasInert: boolean }
+>();
 
 /** Prevents interaction outside a popup, including when popups are stacked. */
 const blockOutside = (modal: HTMLElement) => {
@@ -78,8 +95,11 @@ const Modal = ({ title, children, onClose, active }: ModalProps) => {
       // Wait until the underlying popup has become active again.
       queueMicrotask(() => {
         const opener = openerRef.current;
-        if (opener instanceof HTMLElement && opener.isConnected &&
-          !opener.closest("[inert]")) {
+        if (
+          opener instanceof HTMLElement &&
+          opener.isConnected &&
+          !opener.closest("[inert]")
+        ) {
           opener.focus();
         }
       });
@@ -95,9 +115,11 @@ const Modal = ({ title, children, onClose, active }: ModalProps) => {
 
     const unblock = blockOutside(modal);
     const focusInside = () => {
-      const target = lastFocusRef.current ??
+      const target =
+        lastFocusRef.current ??
         dialog.querySelector<HTMLElement>("[data-modal-initial-focus]") ??
-        dialog.querySelector<HTMLElement>(FOCUSABLE) ?? dialog;
+        dialog.querySelector<HTMLElement>(FOCUSABLE) ??
+        dialog;
       target.focus();
     };
     focusInside();
@@ -114,7 +136,9 @@ const Modal = ({ title, children, onClose, active }: ModalProps) => {
         event.preventDefault();
         closeRef.current();
       } else if (event.key === "Tab") {
-        const targets = Array.from(dialog.querySelectorAll<HTMLElement>(FOCUSABLE));
+        const targets = Array.from(
+          dialog.querySelectorAll<HTMLElement>(FOCUSABLE)
+        );
         const first = targets[0] ?? dialog;
         const last = targets[targets.length - 1] ?? dialog;
         if (event.shiftKey && document.activeElement === first) {
@@ -145,11 +169,13 @@ const Modal = ({ title, children, onClose, active }: ModalProps) => {
       className={`${styles.modal} ${visible ? styles.visible : ""}`}
       aria-hidden={!active || undefined}
     >
-      <Overlay onClick={() => {
-        if (active) {
-          onClose();
-        }
-      }} />
+      <Overlay
+        onClick={() => {
+          if (active) {
+            onClose();
+          }
+        }}
+      />
       <div
         ref={dialogRef}
         className={styles.inner}
@@ -159,7 +185,9 @@ const Modal = ({ title, children, onClose, active }: ModalProps) => {
         tabIndex={-1}
       >
         <header>
-          <h2 id={titleId} className={styles.title}>{title}</h2>
+          <h2 id={titleId} className={styles.title}>
+            {title}
+          </h2>
           <Button
             variant="transparent"
             className={styles.closeButton}

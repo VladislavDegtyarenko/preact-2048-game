@@ -1,16 +1,21 @@
-import { useEffect, useRef, RefObject } from "react";
-import { tilesMoved } from "../features/boardSlice";
-import { Direction } from "../types/types";
-import { useAppDispatch, useAppSelector } from "./reduxHooks";
-import { getBoardSize } from "../features/settingsSlice";
-import { useGameConfirmation } from "../contexts/GameConfirmationContext";
+import { RefObject, useEffect, useRef } from "react";
 
-const useSwipes = (elementRef: RefObject<HTMLDivElement>) => {
+import { useAppDispatch, useAppSelector } from "./reduxHooks";
+
+import { useGameConfirmation } from "../contexts/GameConfirmationContext";
+import { tilesMoved } from "../features/boardSlice";
+import { getBoardSize } from "../features/settingsSlice";
+import { Direction } from "../types/types";
+
+export const useSwipes = (elementRef: RefObject<HTMLDivElement>) => {
   const { pendingAction } = useGameConfirmation();
   const boardSize = useAppSelector(getBoardSize);
-  const settingsIsOpened = useAppSelector((state) => state.settings.settingsIsOpened);
+  const settingsIsOpened = useAppSelector(
+    (state) => state.settings.settingsIsOpened
+  );
   const { gameOver, showWinScreen } = useAppSelector((state) => state.board);
-  const inputBlocked = Boolean(pendingAction) || settingsIsOpened || gameOver || showWinScreen;
+  const inputBlocked =
+    Boolean(pendingAction) || settingsIsOpened || gameOver || showWinScreen;
   const dispatch = useAppDispatch();
 
   const moveTiles = (direction: Direction) => {
@@ -62,8 +67,11 @@ const useSwipes = (elementRef: RefObject<HTMLDivElement>) => {
   let swipeDetected = false; // Initialize the flag to false
 
   function handleTouchStart(e: TouchEvent | MouseEvent) {
-    if (inputBlocked || (e.target instanceof Element &&
-      e.target.closest("button, [role='dialog']"))) {
+    if (
+      inputBlocked ||
+      (e.target instanceof Element &&
+        e.target.closest("button, [role='dialog']"))
+    ) {
       return;
     }
     mouseClicked = true;
@@ -150,5 +158,3 @@ const useSwipes = (elementRef: RefObject<HTMLDivElement>) => {
     };
   }
 };
-
-export default useSwipes;

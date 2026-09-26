@@ -1,18 +1,14 @@
-// React
 import { useEffect, useRef } from "react";
 
-// Redux
 import { useAppDispatch, useAppSelector } from "./reduxHooks";
+
+import { ANIMATION_DURATION } from "../constants";
+import { useGameConfirmation } from "../contexts/GameConfirmationContext";
 import { tilesMoved, userContinuedToPlay } from "../features/boardSlice";
 import { getBoardSize, getSettingsIsOpened } from "../features/settingsSlice";
-
-// TS
 import { Direction } from "../types/types";
 
-import { ANIMATION_DURATION } from "../utils/constants";
-import { useGameConfirmation } from "../contexts/GameConfirmationContext";
-
-const useKeyboard = () => {
+export const useKeyboard = () => {
   const { pendingAction } = useGameConfirmation();
   const isAnimating = useRef(false); // temporarily
 
@@ -38,11 +34,14 @@ const useKeyboard = () => {
     const isArrowKey = (key: KeyboardEvent["key"]) =>
       ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(key);
 
-    if (pendingAction || e.defaultPrevented || e.key === "Tab" ||
-      (e.target instanceof Element && (
-        e.target.closest("input, select, textarea, [role='dialog']") ||
-        (!isArrowKey(e.key) && e.target.closest("button, a"))
-      ))) {
+    if (
+      pendingAction ||
+      e.defaultPrevented ||
+      e.key === "Tab" ||
+      (e.target instanceof Element &&
+        (e.target.closest("input, select, textarea, [role='dialog']") ||
+          (!isArrowKey(e.key) && e.target.closest("button, a"))))
+    ) {
       return;
     }
 
@@ -51,7 +50,13 @@ const useKeyboard = () => {
     // while animating,
     // when settings modal is opened,
     //  if game is over
-    if (tiles.length === 0 || isAnimating.current || settingsIsOpened || gameOver) return;
+    if (
+      tiles.length === 0 ||
+      isAnimating.current ||
+      settingsIsOpened ||
+      gameOver
+    )
+      return;
 
     // keys behaviour when the win screen is shown
     if (win && showWinScreen) {
@@ -89,5 +94,3 @@ const useKeyboard = () => {
     }
   }
 };
-
-export default useKeyboard;

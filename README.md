@@ -28,11 +28,11 @@ The game runs entirely in the browser. No accounts, database, or environment var
 
 Move tiles with the arrow keys, swipe across the board, or click and drag in a direction. Two matching tiles merge into one tile with double the value; for example, two 4s become an 8. Each move that changes the board adds a new tile.
 
-| Control | Action |
-| --- | --- |
-| New game | Start with two tiles and reset the current score. |
-| Undo last move | Restore the board and score before the previous move; available once per move. |
-| Open game settings | Choose a board size or switch between Elegant Dark and Classic Light. |
+| Control            | Action                                                                         |
+| ------------------ | ------------------------------------------------------------------------------ |
+| New game           | Start with two tiles and reset the current score.                              |
+| Undo last move     | Restore the board and score before the previous move; available once per move. |
+| Open game settings | Choose a board size or switch between Elegant Dark and Classic Light.          |
 
 Changing the board size starts a new game. Before your first move, New game and board-size changes happen immediately. After any move that shifts or merges tiles, both actions ask for confirmation, even if you undo that move or the win screen is showing. Inputs that leave the board unchanged do not count as moves. Selecting the current size does nothing.
 
@@ -52,12 +52,18 @@ Saved progress stays in that browser and site address. Clearing the site's store
 
 Run these commands from the repository root:
 
-| Command | Purpose |
-| --- | --- |
-| `pnpm install --frozen-lockfile` | Install dependencies from the lockfile. |
-| `pnpm dev` | Start the development server. |
-| `pnpm build` | Check TypeScript types and write production files to `dist/`. |
-| `pnpm preview` | Serve the production build locally; run the build first. |
+| Command                          | Purpose                                                       |
+| -------------------------------- | ------------------------------------------------------------- |
+| `pnpm install --frozen-lockfile` | Install dependencies from the lockfile.                       |
+| `pnpm format`                    | Format files and sort imports.                                |
+| `pnpm format:check`              | Check formatting without changing files.                      |
+| `pnpm dev`                       | Start the development server.                                 |
+| `pnpm build`                     | Check TypeScript types and write production files to `dist/`. |
+| `pnpm preview`                   | Serve the production build locally; run the build first.      |
+
+Prettier sorts imports into groups separated by blank lines: React and React DOM, other libraries, components, hooks, other local imports, and styles. Components are recognized by the component folders and uppercase filenames; hooks are recognized by the hooks folder and `use` filename prefix. Imports from contexts stay with other local imports. Group labels such as `// Redux` are not generated.
+
+In VS Code, install the recommended Prettier extension. The project settings enable Format on Save and use Prettier for Format Document.
 
 There is no automated test suite or lint command configured. For code changes, run `pnpm build` and follow the manual checks in [Testing Guidelines](AGENTS.md#testing-guidelines).
 
