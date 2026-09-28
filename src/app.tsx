@@ -18,7 +18,6 @@ Settings:
 - Odd or Even Numbers select menu (convert tiles from 2,4,8 to Tile-Tier-1, etc.)
 - Reset score
 - Animations?
-- Dark mode tile glow effect
 */
 
 /* 
@@ -60,11 +59,9 @@ export function App() {
     }
   }, []);
 
-  // Check if dark theme
   useLayoutEffect(() => {
-    theme === "DARK"
-      ? document.body?.classList.add("darkTheme")
-      : document.body?.classList.remove("darkTheme");
+    document.body.classList.toggle("darkTheme", theme === "DARK");
+    document.body.classList.toggle("noireTheme", theme === "NOIRE");
   }, [theme]);
 
   return (

@@ -6,7 +6,8 @@ A browser-based 2048 game: slide matching tiles together to reach 2048, then kee
 
 - Keyboard, touch-swipe, and mouse-drag controls.
 - Board sizes from 3×3 to 6×6, with 4×4 selected by default.
-- Dark and light themes, animated tiles, and a win celebration.
+- Elegant Dark (default), Classic Light, and Noire themes, animated tiles, and a win celebration with confetti matching each theme.
+- Noire pairs a nearly black background with matte graphite-to-ivory tiles and silver-white confetti.
 - One-move undo, current and best scores, and automatic saving in your browser.
 
 ## Run locally
@@ -32,7 +33,7 @@ Move tiles with the arrow keys, swipe across the board, or click and drag in a d
 | ------------------ | ------------------------------------------------------------------------------ |
 | New game           | Start with two tiles and reset the current score.                              |
 | Undo last move     | Restore the board and score before the previous move; available once per move. |
-| Open game settings | Choose a board size or switch between Elegant Dark and Classic Light.          |
+| Open game settings | Choose the board size and theme: Elegant Dark, Classic Light, or Noire.        |
 
 Changing the board size starts a new game. Before your first move, New game and board-size changes happen immediately. After any move that shifts or merges tiles, both actions ask for confirmation, even if you undo that move or the win screen is showing. Inputs that leave the board unchanged do not count as moves. Selecting the current size does nothing.
 

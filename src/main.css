@@ -48,6 +48,22 @@ body {
   --tile2048: #edc22e;
   --tile-huge: #4d4a42;
   --btn-text: var(--text-inverted);
+  --tile2-text: var(--text);
+  --tile4-text: var(--text);
+  --tile8-text: var(--text-inverted);
+  --tile16-text: var(--text-inverted);
+  --tile32-text: var(--text-inverted);
+  --tile64-text: var(--text-inverted);
+  --tile128-text: var(--text-inverted);
+  --tile256-text: var(--text-inverted);
+  --tile512-text: var(--text-inverted);
+  --tile1024-text: var(--text-inverted);
+  --tile2048-text: var(--text-inverted);
+  --tile-huge-text: var(--text-inverted);
+  --win-overlay: #5c490a;
+  --win-overlay-opacity: 0.5;
+  /* Space-separated hex colors, read by the confetti canvas. */
+  --confetti-colors: #f0b077 #eb905f #edcf72 #edc22e #f9f6f2;
 
   --borderRadius: 4px;
 
@@ -60,6 +76,8 @@ body {
   justify-content: center;
   min-height: 100%;
   overflow-x: hidden;
+  transition-property: color, background-color;
+  transition-duration: 0.3s;
 }
 
 .darkTheme {
@@ -85,4 +103,35 @@ body {
   --tile2048: hsl(46, 69%, 53%);
   --tile-huge: #646466;
   --btn-text: var(--text);
+  --confetti-colors: #c58e5f #df9a70 #d5b967 #edcf72 #cdc2af;
+}
+
+.noireTheme {
+  --background: #101113;
+  --text: #f0efeb;
+  --text-inverted: #101113;
+  --board: hsl(228, 8%, 12.5%);
+  --button: #24262a;
+  --button-hover: #393c42;
+  --button-active: #deddd8;
+  --button-active-hover: #f0efeb;
+  --cell: hsl(220, 7%, 15.675%);
+  --tile2: #393c42;
+  --tile4: #484c53;
+  --tile8: #575c64;
+  --tile16: #666c75;
+  --tile32: #858b94;
+  --tile64: #989ea6;
+  --tile128: #abb0b7;
+  --tile256: #bec2c7;
+  --tile512: #d0d3d5;
+  --tile1024: #e0e1de;
+  --tile2048: #f0efeb;
+  --tile-huge: #f0efeb;
+  --btn-text: var(--text);
+  --tile8-text: var(--text);
+  --tile16-text: var(--text);
+  --win-overlay: #000;
+  --win-overlay-opacity: 0.75;
+  --confetti-colors: #989ea6 #bec2c7 #deddd8 #f0efeb;
 }

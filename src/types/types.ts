@@ -1,4 +1,4 @@
-export type Theme = "DARK" | "LIGHT";
+export type Theme = "DARK" | "LIGHT" | "NOIRE";
 export type BoardSize = 3 | 4 | 5 | 6;
 
 export type Settings = {

@@ -37,7 +37,12 @@ const Tile = ({
     animateTileMoves.current = true;
   }, []);
 
-  const color = tileValue > 4 ? { color: "var(--text-inverted)" } : {};
+  const color = {
+    color:
+      tileValue > 2048
+        ? "var(--tile-huge-text)"
+        : `var(--tile${tileValue}-text)`,
+  };
 
   const backgroundColor =
     tileValue > 2048
