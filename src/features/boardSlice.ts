@@ -11,12 +11,12 @@ import {
   TileValue,
 } from "../types/types";
 import { loadState, saveState } from "../utils/localStorage";
-import { migrateBoardState } from "./migrateBoardState";
+import { restoreBoardState } from "./restoreBoardState";
 
 const savedBoard = loadState("board");
 
 const initialState: BoardState = savedBoard
-  ? migrateBoardState(savedBoard)
+  ? restoreBoardState(savedBoard)
   : {
       hasMoved: false,
       tiles: [],

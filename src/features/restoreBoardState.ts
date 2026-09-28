@@ -16,14 +16,20 @@ const isValidBestScore = (value: unknown): value is number => {
   );
 };
 
-/** Restore saved records by board size without changing the current game. */
-export const migrateBoardState = (savedBoard: SavedBoard): BoardState => {
-  const bestScore: BoardState["bestScore"] = {};
-  const savedBestScore = savedBoard.bestScore;
+/** Assign the legacy shared record to the original 4×4 board. */
+const migrateLegacyBestScore = (bestScore: number): BoardState["bestScore"] => {
+  return { 4: bestScore };
+};
 
-  if (isValidBestScore(savedBestScore)) {
-    bestScore[4] = savedBestScore;
-  } else if (
+/** Restore saved records and move status without changing the current game. */
+export const restoreBoardState = (savedBoard: SavedBoard): BoardState => {
+  const bestScore: BoardState["bestScore"] = {};
+  const savedBestScore =
+    typeof savedBoard.bestScore === "number"
+      ? migrateLegacyBestScore(savedBoard.bestScore)
+      : savedBoard.bestScore;
+
+  if (
     typeof savedBestScore === "object" &&
     savedBestScore !== null &&
     !Array.isArray(savedBestScore)
