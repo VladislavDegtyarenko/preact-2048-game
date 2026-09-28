@@ -19,3 +19,21 @@
     font-size: calc(1em - var(--fontSizeReduceCoeff));
   }
 }
+
+.button {
+  border: 0;
+  font-family: inherit;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: 2px;
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      background-color: var(--button-hover);
+    }
+  }
+}

@@ -65,11 +65,9 @@ export function App() {
   }, [theme]);
 
   return (
-    <>
-      <GameWrapper>
-        <Header />
-        <Board />
-      </GameWrapper>
-    </>
+    <GameWrapper>
+      <Header />
+      <Board />
+    </GameWrapper>
   );
 }

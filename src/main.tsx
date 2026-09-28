@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 
 import { App } from "./app";
 
+import { BestScoresModalProvider } from "./contexts/BestScoresModalContext";
 import { GameConfirmationProvider } from "./contexts/GameConfirmationContext";
 import { store } from "./store/store";
 
@@ -18,7 +19,9 @@ root.render(
     <Analytics />
     <Provider store={store}>
       <GameConfirmationProvider>
-        <App />
+        <BestScoresModalProvider>
+          <App />
+        </BestScoresModalProvider>
       </GameConfirmationProvider>
     </Provider>
   </StrictMode>

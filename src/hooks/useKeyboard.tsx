@@ -1,21 +1,20 @@
 import { useEffect, useRef } from "react";
 
 import { useAppDispatch, useAppSelector } from "./reduxHooks";
+import { useGameInputBlocked } from "./useGameInputBlocked";
 
 import { ANIMATION_DURATION } from "../constants";
-import { useGameConfirmation } from "../contexts/GameConfirmationContext";
 import { tilesMoved, userContinuedToPlay } from "../features/boardSlice";
-import { getBoardSize, getSettingsIsOpened } from "../features/settingsSlice";
+import { getBoardSize } from "../features/settingsSlice";
 import { Direction } from "../types/types";
 
 export const useKeyboard = () => {
-  const { pendingAction } = useGameConfirmation();
+  const inputBlocked = useGameInputBlocked();
   const isAnimating = useRef(false); // temporarily
 
   const { tiles, gameOver, win, waitAfterWin, showWinScreen } = useAppSelector(
     (state) => state.board
   );
-  const settingsIsOpened = useAppSelector(getSettingsIsOpened);
   const boardSize = useAppSelector(getBoardSize);
   const dispatch = useAppDispatch();
 
@@ -35,7 +34,7 @@ export const useKeyboard = () => {
       ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(key);
 
     if (
-      pendingAction ||
+      inputBlocked ||
       e.defaultPrevented ||
       e.key === "Tab" ||
       (e.target instanceof Element &&
@@ -48,15 +47,10 @@ export const useKeyboard = () => {
     // prevent arrow keys actions
     // if the board is empty,
     // while animating,
-    // when settings modal is opened,
-    //  if game is over
-    if (
-      tiles.length === 0 ||
-      isAnimating.current ||
-      settingsIsOpened ||
-      gameOver
-    )
+    // or if the game is over
+    if (tiles.length === 0 || isAnimating.current || gameOver) {
       return;
+    }
 
     // keys behaviour when the win screen is shown
     if (win && showWinScreen) {

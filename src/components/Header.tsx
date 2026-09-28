@@ -7,6 +7,7 @@ import Button from "./ui/Button";
 
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
 
+import { useBestScoresModal } from "../contexts/BestScoresModalContext";
 import { useGameConfirmation } from "../contexts/GameConfirmationContext";
 import { undoMove } from "../features/boardSlice";
 import { settingsModalToggled } from "../features/settingsSlice";
@@ -14,10 +15,12 @@ import { settingsModalToggled } from "../features/settingsSlice";
 import styles from "./Header.module.scss";
 
 const Header = () => {
+  const { open: openBestScores } = useBestScoresModal();
   const { requestNewGame } = useGameConfirmation();
   const { score, bestScore, previousScore } = useAppSelector(
     (state) => state.board
   );
+  const boardSize = useAppSelector((state) => state.settings.boardSize);
 
   const dispatch = useAppDispatch();
   const noUndoActions = previousScore === null;
@@ -32,7 +35,11 @@ const Header = () => {
         <h1>2048</h1>
         <div className={styles.stats}>
           <ScoreLabel score={score} label="Score" />
-          <ScoreLabel score={bestScore} label="Best" />
+          <ScoreLabel
+            score={bestScore[boardSize] ?? 0}
+            label="Best"
+            onClick={openBestScores}
+          />
         </div>
       </div>
       <div className={styles.row}>
