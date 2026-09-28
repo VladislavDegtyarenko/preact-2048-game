@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import Confetti from "react-confetti";
 
@@ -9,6 +9,8 @@ import {
   userCanContinue,
   userContinuedToPlay,
 } from "../../features/boardSlice";
+import { getTheme } from "../../features/settingsSlice";
+import { Theme } from "../../types/types";
 
 import styles from "./WinScreen.module.scss";
 
@@ -22,8 +24,24 @@ const YouWin = ({ isBlocked = false }: { isBlocked?: boolean }) => {
 
   const { waitAfterWin } = useAppSelector((state) => state.board);
   const dispatch = useAppDispatch();
+  const theme = useAppSelector(getTheme);
+  const [confettiPalette, setConfettiPalette] = useState<{
+    theme: Theme;
+    colors: string[];
+  } | null>(null);
 
   const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    // App applies the theme class in a layout effect before we read its colors.
+    const colors = getComputedStyle(document.body)
+      .getPropertyValue("--confetti-colors")
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean);
+
+    setConfettiPalette({ theme, colors });
+  }, [theme]);
 
   useLayoutEffect(() => {
     // Fade In animation
@@ -55,13 +73,16 @@ const YouWin = ({ isBlocked = false }: { isBlocked?: boolean }) => {
       onClick={hideWinScreen}
       onTouchStart={hideWinScreen}
     >
-      <Confetti
-        {...confettiSize}
-        numberOfPieces={150}
-        opacity={0.7}
-        gravity={0.1}
-        // recycle={false}
-      />
+      {confettiPalette?.theme === theme && confettiPalette.colors.length > 0 ? (
+        <Confetti
+          key={theme}
+          {...confettiSize}
+          colors={confettiPalette.colors}
+          numberOfPieces={150}
+          opacity={0.7}
+          gravity={0.1}
+        />
+      ) : null}
       <h2 className={styles.title}>You win!</h2>
       <h3 className={`${styles.subtitle} ${waitAfterWin ? styles.hidden : ""}`}>
         Press any key to keep going

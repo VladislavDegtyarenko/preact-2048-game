@@ -8,7 +8,6 @@
   padding: 1em;
   border: none;
   border-radius: var(--borderRadius);
-  transition: background-color var(--transition-duration) ease;
 
   &:disabled {
     cursor: default;

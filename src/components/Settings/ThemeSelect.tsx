@@ -14,8 +14,9 @@ const ThemeSelect = () => {
   };
 
   const themeOptions: { [key: string]: Theme } = {
-    "Elegant Dark": "DARK",
     "Classic Light": "LIGHT",
+    "Elegant Dark": "DARK",
+    "Matte Noire": "NOIRE",
   };
 
   return (
