@@ -1,9 +1,9 @@
 import Button from "./Button";
 import Modal from "./Modal";
 
-import styles from "./ConfirmDialog.module.scss";
+import styles from "./ConfirmModal.module.scss";
 
-type ConfirmDialogProps = {
+type ConfirmModalProps = {
   title: string;
   message: string;
   confirmLabel: string;
@@ -11,13 +11,13 @@ type ConfirmDialogProps = {
   onCancel: () => void;
 };
 
-const ConfirmDialog = ({
+const ConfirmModal = ({
   title,
   message,
   confirmLabel,
   onConfirm,
   onCancel,
-}: ConfirmDialogProps) => (
+}: ConfirmModalProps) => (
   <Modal title={title} onClose={onCancel} active>
     <p className={styles.message}>{message}</p>
     <div className={styles.actions}>
@@ -31,4 +31,4 @@ const ConfirmDialog = ({
   </Modal>
 );
 
-export default ConfirmDialog;
+export default ConfirmModal;

@@ -1,21 +1,17 @@
 import { RefObject, useEffect, useRef } from "react";
 
 import { useAppDispatch, useAppSelector } from "./reduxHooks";
+import { useGameInputBlocked } from "./useGameInputBlocked";
 
-import { useGameConfirmation } from "../contexts/GameConfirmationContext";
 import { tilesMoved } from "../features/boardSlice";
 import { getBoardSize } from "../features/settingsSlice";
 import { Direction } from "../types/types";
 
 export const useSwipes = (elementRef: RefObject<HTMLDivElement>) => {
-  const { pendingAction } = useGameConfirmation();
+  const modalInputBlocked = useGameInputBlocked();
   const boardSize = useAppSelector(getBoardSize);
-  const settingsIsOpened = useAppSelector(
-    (state) => state.settings.settingsIsOpened
-  );
   const { gameOver, showWinScreen } = useAppSelector((state) => state.board);
-  const inputBlocked =
-    Boolean(pendingAction) || settingsIsOpened || gameOver || showWinScreen;
+  const inputBlocked = modalInputBlocked || gameOver || showWinScreen;
   const dispatch = useAppDispatch();
 
   const moveTiles = (direction: Direction) => {
@@ -105,7 +101,6 @@ export const useSwipes = (elementRef: RefObject<HTMLDivElement>) => {
 
     if (swipeDetected) return; // Don't detect any more swipes if one has already been detected
     if (!mouseClicked) return; // Skip if mousedown is not fired
-    if (settingsIsOpened) return;
 
     let x = 0,
       y = 0;

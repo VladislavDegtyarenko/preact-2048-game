@@ -6,13 +6,13 @@ import { useAppDispatch } from "../../hooks/reduxHooks";
 
 import { settingsModalToggled } from "../../features/settingsSlice";
 
-import styles from "./Settings.module.scss";
+import styles from "./SettingsModal.module.scss";
 
-type SettingsProps = {
+type SettingsModalProps = {
   active: boolean;
 };
 
-const Settings = ({ active }: SettingsProps) => {
+const SettingsModal = ({ active }: SettingsModalProps) => {
   const dispatch = useAppDispatch();
 
   return (
@@ -27,10 +27,10 @@ const Settings = ({ active }: SettingsProps) => {
       </div>
       <p className={styles.subtitle}>
         Changing the board size starts a new game and resets your current score.
-        Your best score is kept.
+        Your best scores are saved separately for each board size.
       </p>
     </Modal>
   );
 };
 
-export default Settings;
+export default SettingsModal;

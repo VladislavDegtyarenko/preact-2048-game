@@ -10,41 +10,27 @@ import {
   Tile,
   TileValue,
 } from "../types/types";
-import { loadState } from "../utils/localStorage";
+import { loadState, saveState } from "../utils/localStorage";
+import { restoreBoardState } from "./restoreBoardState";
 
-type SavedBoard = Omit<BoardState, "hasMoved"> & { hasMoved?: boolean };
-
-const savedBoard: SavedBoard | undefined = loadState("board");
+const savedBoard = loadState("board");
 
 const initialState: BoardState = savedBoard
-  ? {
-      ...savedBoard,
-      hasMoved:
-        savedBoard.hasMoved ??
-        Boolean(
-          savedBoard.score > 0 ||
-          savedBoard.previousTiles?.length ||
-          savedBoard.previousScore != null ||
-          savedBoard.tiles.length > 2 ||
-          savedBoard.tiles.some((tile) => tile.value > 4) ||
-          savedBoard.win ||
-          savedBoard.gameOver ||
-          savedBoard.showWinScreen ||
-          savedBoard.waitAfterWin
-        ),
-    }
+  ? restoreBoardState(savedBoard)
   : {
       hasMoved: false,
       tiles: [],
       previousTiles: null,
       score: 0,
       previousScore: null,
-      bestScore: 0,
+      bestScore: {},
       gameOver: false,
       win: false,
       waitAfterWin: false,
       showWinScreen: false,
     };
+
+saveState("board", initialState);
 
 const getNewTile = (currentTiles: Tile[], boardSize: BoardSize): Tile => {
   const getRandomPosition = () => {
@@ -271,8 +257,8 @@ export const boardSlice = createSlice({
       state.previousScore = state.score;
       state.score += scoreToAdd;
 
-      if (state.score > state.bestScore) {
-        state.bestScore = state.score;
+      if (state.score > (state.bestScore[boardSize] ?? 0)) {
+        state.bestScore[boardSize] = state.score;
       }
 
       state.tiles = newTiles;

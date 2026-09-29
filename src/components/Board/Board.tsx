@@ -1,7 +1,8 @@
 import { useRef } from "react";
 
-import Settings from "../Settings/Settings";
-import ConfirmDialog from "../ui/ConfirmDialog";
+import SettingsModal from "../Settings/SettingsModal";
+import ConfirmModal from "../ui/ConfirmModal";
+import BestScoresModal from "./BestScoresModal";
 import GameOverScreen from "./GameOverScreen";
 import Grid from "./Grid";
 import Tiles from "./Tiles";
@@ -9,11 +10,13 @@ import WinScreen from "./WinScreen";
 
 import { useAppSelector } from "../../hooks/reduxHooks";
 
+import { useBestScoresModal } from "../../contexts/BestScoresModalContext";
 import { useGameConfirmation } from "../../contexts/GameConfirmationContext";
 
 import styles from "./Board.module.scss";
 
 const Board = () => {
+  const { isOpen: bestScoresIsOpen } = useBestScoresModal();
   const { pendingAction, confirm, cancel } = useGameConfirmation();
   const boardRef = useRef<HTMLDivElement>(null);
 
@@ -28,13 +31,14 @@ const Board = () => {
         <Grid />
         <Tiles />
       </div>
-      {showWinScreen ? (
-        <WinScreen isBlocked={Boolean(pendingAction) || settingsIsOpened} />
-      ) : null}
+      {showWinScreen ? <WinScreen /> : null}
       {gameOver ? <GameOverScreen /> : null}
-      {settingsIsOpened ? <Settings active={!pendingAction} /> : null}
+      {settingsIsOpened ? (
+        <SettingsModal active={!pendingAction && !bestScoresIsOpen} />
+      ) : null}
+      {bestScoresIsOpen ? <BestScoresModal /> : null}
       {pendingAction ? (
-        <ConfirmDialog
+        <ConfirmModal
           title={
             pendingAction.type === "new-game"
               ? "Start a new game?"

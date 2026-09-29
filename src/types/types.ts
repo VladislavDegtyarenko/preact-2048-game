@@ -13,7 +13,7 @@ export type BoardState = {
   previousTiles: Tile[] | null;
   score: number;
   previousScore: number | null;
-  bestScore: number;
+  bestScore: Partial<Record<BoardSize, number>>;
   gameOver: boolean;
   win: boolean;
   waitAfterWin: boolean;
@@ -56,7 +56,7 @@ export type GameContextProps = {
   tiles: Tile[];
   tilesPerRow: number;
   score: number;
-  bestScore: number;
+  bestScore: BoardState["bestScore"];
   gameOver: boolean;
   previousScore: number | null;
   ANIMATION_DURATION: number;

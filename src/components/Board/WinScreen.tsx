@@ -4,6 +4,7 @@ import Confetti from "react-confetti";
 
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { useElementSize } from "../../hooks/useElementSize";
+import { useGameInputBlocked } from "../../hooks/useGameInputBlocked";
 
 import {
   userCanContinue,
@@ -14,7 +15,8 @@ import { Theme } from "../../types/types";
 
 import styles from "./WinScreen.module.scss";
 
-const YouWin = ({ isBlocked = false }: { isBlocked?: boolean }) => {
+const YouWin = () => {
+  const inputBlocked = useGameInputBlocked();
   const [winScreenElement, setWinScreenElement] =
     useState<HTMLDivElement | null>(null);
   const confettiSize = useElementSize(winScreenElement);
@@ -61,7 +63,7 @@ const YouWin = ({ isBlocked = false }: { isBlocked?: boolean }) => {
   }, []);
 
   const hideWinScreen = () => {
-    if (!isBlocked && !waitAfterWin) {
+    if (!inputBlocked && !waitAfterWin) {
       dispatch(userContinuedToPlay());
     }
   };

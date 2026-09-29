@@ -10,9 +10,9 @@ type CustomCountUpStyles = CSSProperties & {
   "--fontSizeReduceCoeff": string;
 };
 
-type Props = { score: number; label: string };
+type Props = { score: number; label: string; onClick?: () => void };
 
-const ScoreLabel = ({ score, label }: Props) => {
+const ScoreLabel = ({ score, label, onClick }: Props) => {
   const [prevScore, setPrevScore] = useState(0);
   const [currentScore, setCurrentScore] = useState(score);
 
@@ -32,8 +32,8 @@ const ScoreLabel = ({ score, label }: Props) => {
     "--fontSizeReduceCoeff": getScoreNumFontSizeCoeff(score),
   } as CustomCountUpStyles;
 
-  return (
-    <h2 className={styles.scoreLabel}>
+  const content = (
+    <>
       <span className={styles.scoreHeading}>{label}</span>
       <CountUp
         start={prevScore || 0}
@@ -42,8 +42,27 @@ const ScoreLabel = ({ score, label }: Props) => {
         className={styles.scoreNum}
         style={countUpStyle}
       />
-    </h2>
+    </>
   );
+
+  if (onClick) {
+    return (
+      <button
+        type="button"
+        className={`${styles.scoreLabel} ${styles.button}`}
+        aria-haspopup="dialog"
+        title="View best scores"
+        onClick={(event) => {
+          event.currentTarget.focus();
+          onClick();
+        }}
+      >
+        {content}
+      </button>
+    );
+  }
+
+  return <h2 className={styles.scoreLabel}>{content}</h2>;
 };
 
 export default ScoreLabel;
