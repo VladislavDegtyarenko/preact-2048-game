@@ -2,6 +2,16 @@
 
 A browser-based 2048 game: slide matching tiles together to reach 2048, then keep playing for a higher score. Built with React and TypeScript, with Vite for development and production builds.
 
+[Play the live demo](https://preact-2048-game.vercel.app/) · [Run locally](#run-locally) · [How it works](#how-it-works)
+
+![2048 game with a saved board, score, undo button, and game settings](assets/2048-preview.png)
+
+## Project overview
+
+This project explores interactive state in a small browser game: movement and merging, one-move undo, saved progress, and input handling across keyboard, touch, and mouse. Redux Toolkit keeps the game rules separate from the interface, while browser storage preserves the board and records between visits.
+
+The current implementation uses **React**, despite the historical `preact-2048-game` repository name. No sign-in is needed to play.
+
 ## Features
 
 - Keyboard, touch-swipe, and mouse-drag controls.
@@ -84,3 +94,4 @@ There is no automated test suite or lint command configured. For code changes, r
 ## Contributing
 
 Read [AGENTS.md](AGENTS.md) for the annotated source tree, coding conventions, manual testing checklist, and commit and pull request guidance. Keep setup and gameplay documentation in this README and contributor instructions in `AGENTS.md`.
+
